@@ -1,10 +1,13 @@
-import { useRef } from 'react'
-import { motion } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import Reveal from './Reveal'
+import ArticleReader from './ArticleReader'
 import { articles } from '../data'
 
 export default function Journal() {
   const trackRef = useRef(null)
+  const [openId, setOpenId] = useState(null)
+  const openArticle = articles.find((a) => a.id === openId)
 
   const slide = (dir) => {
     const el = trackRef.current
@@ -49,7 +52,7 @@ export default function Journal() {
                 <p>{a.excerpt}</p>
                 <div className="j-card__foot">
                   <span>{a.minutes} min read</span>
-                  <a href={`#${a.id}`} className="link-arrow">Read →</a>
+                  <button className="link-arrow" onClick={() => setOpenId(a.id)}>Read →</button>
                 </div>
               </div>
             </motion.article>
@@ -60,6 +63,16 @@ export default function Journal() {
           <a href="#journal" className="btn btn--ghost"><span>Read More Wisdom</span></a>
         </Reveal>
       </div>
+
+      <AnimatePresence>
+        {openArticle && (
+          <ArticleReader
+            article={openArticle}
+            onClose={() => setOpenId(null)}
+            onOpen={(id) => setOpenId(id)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   )
 }

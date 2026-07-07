@@ -28,8 +28,8 @@ export default function Hero() {
           </motion.h1>
 
           <motion.p className="hero__sub" variants={fade} initial="hidden" animate="show" custom={2}>
-            Ancient Ayurvedic wisdom meets modern hair science — a 100% botanical
-            growth oil infused with Ashwagandha to treat shedding at its source.
+            100% botanical hair and scalp oil infused with Ashwagandha to treat
+            shedding at its source.
           </motion.p>
 
           <motion.div className="hero__cta" variants={fade} initial="hidden" animate="show" custom={3}>

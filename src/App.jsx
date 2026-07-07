@@ -4,6 +4,7 @@ import Header from './components/Header'
 import Hero from './components/Hero'
 import ProductSpotlight from './components/ProductSpotlight'
 import WhySection from './components/WhySection'
+import Reviews from './components/Reviews'
 import Journal from './components/Journal'
 import FounderBanner from './components/FounderBanner'
 import Footer from './components/Footer'
@@ -28,6 +29,7 @@ export default function App() {
         <Hero />
         <ProductSpotlight onAdd={addToCart} />
         <WhySection />
+        <Reviews />
         <Journal />
         <FounderBanner />
       </main>
