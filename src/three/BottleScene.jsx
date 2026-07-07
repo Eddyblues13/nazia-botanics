@@ -1,5 +1,5 @@
-import { Suspense, useRef } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Suspense, useEffect, useRef } from 'react'
+import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber'
 import {
   Float,
   Environment,
@@ -8,10 +8,14 @@ import {
   MeshTransmissionMaterial,
 } from '@react-three/drei'
 import * as THREE from 'three'
+import labelUrl from '../assets/label.png'
 
 /* A stylised amber dropper bottle built from primitives. */
 function Bottle() {
   const group = useRef()
+  const labelTex = useLoader(THREE.TextureLoader, labelUrl)
+  labelTex.colorSpace = THREE.SRGBColorSpace
+  labelTex.anisotropy = 8
 
   // Gentle mouse-driven parallax tilt + idle sway.
   useFrame((state) => {
@@ -35,17 +39,17 @@ function Bottle() {
           ior={1.4}
           chromaticAberration={0.02}
           backside
-          color="#f2f2f2"
-          attenuationColor="#cfcfcf"
-          attenuationDistance={2.4}
+          color="#b06a24"
+          attenuationColor="#6e3a0d"
+          attenuationDistance={1.6}
         />
       </mesh>
 
-      {/* Dark oil inside */}
+      {/* Amber oil inside */}
       <mesh position={[0, -0.45, 0]}>
         <cylinderGeometry args={[0.78, 0.78, 1.25, 48]} />
         <meshStandardMaterial
-          color="#161616"
+          color="#5a2c07"
           roughness={0.25}
           metalness={0.1}
           transparent
@@ -61,7 +65,7 @@ function Bottle() {
           roughness={0.08}
           transmission={1}
           ior={1.4}
-          color="#f2f2f2"
+          color="#b06a24"
           backside
         />
       </mesh>
@@ -69,38 +73,38 @@ function Bottle() {
       {/* Neck */}
       <mesh position={[0, 1.28, 0]}>
         <cylinderGeometry args={[0.3, 0.3, 0.3, 48]} />
-        <MeshTransmissionMaterial thickness={0.6} roughness={0.1} transmission={1} ior={1.4} color="#f2f2f2" />
+        <MeshTransmissionMaterial thickness={0.6} roughness={0.1} transmission={1} ior={1.4} color="#b06a24" />
       </mesh>
 
-      {/* Dropper cap */}
+      {/* Dropper cap — deep teal like the product photo */}
       <mesh castShadow position={[0, 1.62, 0]}>
         <cylinderGeometry args={[0.36, 0.36, 0.45, 48]} />
-        <meshStandardMaterial color="#161616" roughness={0.55} metalness={0.2} />
+        <meshStandardMaterial color="#122a28" roughness={0.55} metalness={0.2} />
       </mesh>
       <mesh position={[0, 1.95, 0]}>
         <sphereGeometry args={[0.18, 32, 32]} />
-        <meshStandardMaterial color="#000000" roughness={0.4} />
+        <meshStandardMaterial color="#0b1c1a" roughness={0.4} />
       </mesh>
 
-      {/* Front label */}
-      <mesh position={[0, -0.2, 0.86]} rotation={[0, 0, 0]}>
-        <planeGeometry args={[1.1, 1.25, 1, 1]} />
-        <meshStandardMaterial color="#ffffff" roughness={0.85} side={THREE.DoubleSide} />
+      {/* Wrapped front label with the Nazia Botanics logo */}
+      <mesh position={[0, -0.2, 0]}>
+        <cylinderGeometry args={[0.87, 0.87, 1.3, 64, 1, true, -0.8, 1.6]} />
+        <meshStandardMaterial map={labelTex} roughness={0.85} side={THREE.DoubleSide} />
       </mesh>
     </group>
   )
 }
 
 /* Soft floating botanical petals around the bottle. */
-function Petals({ count = 7 }) {
+function Petals({ count = 7, palette = ['#9c4f56', '#95a075'] }) {
   const items = Array.from({ length: count }, (_, i) => {
     const a = (i / count) * Math.PI * 2
     const r = 2 + (i % 3) * 0.35
     return {
-      pos: [Math.cos(a) * r, (Math.sin(a * 1.6) * 0.8), Math.sin(a) * r - 0.5],
-      scale: 0.18 + (i % 4) * 0.05,
+      pos: [Math.cos(a) * r, (Math.sin(a * 1.6) * 0.8), Math.sin(a) * r - 1.1],
+      scale: 0.15 + (i % 4) * 0.04,
       speed: 1 + (i % 3) * 0.4,
-      color: i % 2 ? '#2e2e2e' : '#a0a0a0',
+      color: palette[i % palette.length],
     }
   })
 
@@ -132,21 +136,31 @@ function Rig() {
   )
 }
 
-export default function BottleScene() {
+/* Point the camera at the bottle no matter where a variant places it. */
+function CameraAim({ target = [0, -0.1, 0] }) {
+  const camera = useThree((s) => s.camera)
+  useEffect(() => {
+    camera.lookAt(...target)
+  }, [camera, target])
+  return null
+}
+
+export default function BottleScene({ camY = 0.4, zoom = 6, petals, aimY = -0.1 }) {
   return (
     <Canvas
       shadows
       dpr={[1, 2]}
-      camera={{ position: [0, 0.4, 6], fov: 32 }}
+      camera={{ position: [0, camY, zoom], fov: 32 }}
       gl={{ antialias: true, alpha: true }}
       style={{ width: '100%', height: '100%' }}
     >
       <Suspense fallback={null}>
+        <CameraAim target={[0, aimY, 0]} />
         <Rig />
         <Float speed={1.1} rotationIntensity={0.25} floatIntensity={0.8}>
           <Bottle />
         </Float>
-        <Petals />
+        <Petals palette={petals} />
         <ContactShadows
           position={[0, -2.2, 0]}
           opacity={0.4}

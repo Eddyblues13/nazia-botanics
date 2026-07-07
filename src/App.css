@@ -121,6 +121,11 @@
   gap: 0.55rem;
   color: var(--ink);
 }
+.brand__mark {
+  display: block;
+  height: clamp(5rem, 8vw, 5.75rem);
+  width: auto;
+}
 .brand__leaf {
   color: var(--sage-deep);
   display: grid;
@@ -248,6 +253,121 @@
   z-index: 1;
   height: min(74vh, 640px);
   width: 100%;
+}
+.hero-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  perspective: 1100px;
+}
+.hero-slider__frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.25s ease-out;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.hero-slider__track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.55s var(--ease);
+}
+.hero-slider__slide--scene {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+/* Take the R3F canvas wrapper out of flow so it can never drive layout width */
+.hero-slider__slide--scene > div {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+.hero-slider__slide--blush {
+  background: radial-gradient(circle at 50% 42%, #f2e0d2 0%, #f8f0e5 70%);
+}
+.hero-slider__slide--cream {
+  background: radial-gradient(circle at 50% 42%, #f8f0e5 0%, #efe6d6 72%);
+}
+.hero-slider__slide--sand {
+  background: radial-gradient(circle at 50% 42%, #e9e4d8 0%, #f6f1e6 70%);
+}
+.hero-slider canvas {
+  touch-action: pan-y; /* keep page scroll working over the 3D scene on phones */
+}
+.hero-slider__scene-fallback {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 40%, rgba(231, 216, 189, 0.9), transparent 65%);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+.hero-slider__slide {
+  flex: 0 0 100%;
+  min-width: 0; /* stop canvas intrinsic size from inflating the track */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+.hero-slider__sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  background-size: 250% 100%;
+  animation: sheen 7s ease-in-out infinite;
+}
+@keyframes sheen {
+  0%, 55% { background-position: 120% 0; }
+  85%, 100% { background-position: -60% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slider__sheen {
+    animation: none;
+  }
+}
+@media (max-width: 920px) {
+  .hero-slider__dots {
+    bottom: 10px;
+    gap: 10px;
+  }
+  .hero-slider__dots button {
+    width: 12px;
+    height: 12px;
+  }
+}
+.hero-slider__dots {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+.hero-slider__dots button {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: rgba(17, 17, 17, 0.25);
+  transition: background 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.hero-slider__dots button.is-active {
+  background: var(--terracotta-deep);
+  transform: scale(1.25);
 }
 .hero__stage-fallback {
   width: 100%;

@@ -17,7 +17,7 @@ export default function Footer() {
     <footer className="footer" id="footer">
       <div className="container footer__grid">
         <div className="footer__signup">
-          <Logo />
+          <Logo variant="text" />
           <h3>Join our community for weekly wellness rituals.</h3>
           {done ? (
             <p className="footer__thanks">Welcome to the ritual — check your inbox. 🌿</p>

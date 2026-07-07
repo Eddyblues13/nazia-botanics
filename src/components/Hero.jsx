@@ -1,8 +1,5 @@
-import { Suspense, lazy } from 'react'
 import { motion } from 'framer-motion'
-
-// 3D canvas is heavy — load it lazily so first paint stays instant.
-const BottleScene = lazy(() => import('../three/BottleScene'))
+import HeroSlider from './HeroSlider'
 
 const fade = {
   hidden: { opacity: 0, y: 32 },
@@ -52,10 +49,7 @@ export default function Hero() {
         </div>
 
         <div className="hero__stage">
-          <Suspense fallback={<div className="hero__stage-fallback" aria-hidden="true" />}>
-            <BottleScene />
-          </Suspense>
-          <p className="hero__hint">Drag your cursor to turn the bottle</p>
+          <HeroSlider />
         </div>
       </div>
 
