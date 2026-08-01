@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import Logo from './Logo'
+import Logo from '@/components/common/Logo'
 
 const NAV = [
-  { label: 'Shop', href: '#shop' },
-  { label: 'The Journal', href: '#journal' },
-  { label: 'Our Story', href: '#story' },
-  { label: 'My Account', href: '#account' },
+  { label: 'Shop', to: '/shop' },
+  { label: 'The Journal', to: '/journal' },
+  { label: 'Our Story', to: '/our-story' },
+  { label: 'My Account', to: '/account' },
 ]
 
 export default function Header({ cartCount = 0 }) {
@@ -32,20 +33,26 @@ export default function Header({ cartCount = 0 }) {
 
         <nav className="header__nav" aria-label="Primary">
           {NAV.map((item) => (
-            <a key={item.label} href={item.href} className="header__link">
+            <NavLink
+              key={item.label}
+              to={item.to}
+              className={({ isActive }) =>
+                `header__link ${isActive ? 'header__link--active' : ''}`
+              }
+            >
               {item.label}
-            </a>
+            </NavLink>
           ))}
         </nav>
 
         <div className="header__actions">
-          <a href="#shop" className="header__cart" aria-label="Cart">
+          <Link to="/shop" className="header__cart" aria-label="Cart">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.4">
               <path d="M6 7h12l-1 12.5a1.5 1.5 0 0 1-1.5 1.4H8.5A1.5 1.5 0 0 1 7 19.5L6 7Z" />
               <path d="M9 7a3 3 0 0 1 6 0" />
             </svg>
             {cartCount > 0 && <span className="header__badge">{cartCount}</span>}
-          </a>
+          </Link>
           <button
             className="header__burger"
             aria-label="Menu"
@@ -68,9 +75,9 @@ export default function Header({ cartCount = 0 }) {
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
             {NAV.map((item) => (
-              <a key={item.label} href={item.href} onClick={() => setOpen(false)}>
+              <NavLink key={item.label} to={item.to} onClick={() => setOpen(false)}>
                 {item.label}
-              </a>
+              </NavLink>
             ))}
           </motion.nav>
         )}

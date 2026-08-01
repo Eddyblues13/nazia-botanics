@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
-import Reveal from './Reveal'
-import { reviews } from '../data'
+import Reveal from '@/components/common/Reveal'
+import { reviews } from '@/data'
 
 function Stars({ rating }) {
   return (

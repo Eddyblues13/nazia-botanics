@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import Logo from './Logo'
-import { social } from '../data'
+import { Link } from 'react-router-dom'
+import Logo from '@/components/common/Logo'
+import { social } from '@/data'
 
 export default function Footer() {
   const [email, setEmail] = useState('')
@@ -39,21 +40,20 @@ export default function Footer() {
         <nav className="footer__links" aria-label="Footer">
           <div>
             <h4>Shop</h4>
-            <a href="#shop">Growth Oil</a>
-            <a href="#shop">Gift Sets</a>
-            <a href="#account">Founding Circle</a>
+            <Link to="/shop">Growth Oil</Link>
+            <Link to="/shop">Gift Sets</Link>
           </div>
           <div>
             <h4>Learn</h4>
-            <a href="#journal">The Journal</a>
-            <a href="#story">Our Story</a>
-            <a href="#journal">Ritual Guide</a>
+            <Link to="/journal">The Journal</Link>
+            <Link to="/our-story">Our Story</Link>
+            <Link to="/journal/scalp-massage-ritual">Ritual Guide</Link>
           </div>
           <div>
             <h4>Company</h4>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms</a>
-            <a href="#footer">Contact</a>
+            <Link to="/privacy">Privacy Policy</Link>
+            <Link to="/terms">Terms</Link>
+            <Link to="/contact">Contact</Link>
           </div>
         </nav>
       </div>

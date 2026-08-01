@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react'
-import Reveal from './Reveal'
-import { product, ritualGuideLink, formatNaira } from '../data'
+import { Link } from 'react-router-dom'
+import Reveal from '@/components/common/Reveal'
+import { useCart } from '@/context/cart-context'
+import { product, ritualGuideLink, formatNaira } from '@/data'
 
 function HighlightIcon({ type }) {
   const common = { width: 26, height: 26, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.3, strokeLinecap: 'round', strokeLinejoin: 'round' }
@@ -17,7 +19,8 @@ function HighlightIcon({ type }) {
   )
 }
 
-export default function ProductSpotlight({ onAdd }) {
+export default function ProductSpotlight() {
+  const { addToCart } = useCart()
   const [size, setSize] = useState(product.sizes[1])
   const cardRef = useRef(null)
 
@@ -107,11 +110,11 @@ export default function ProductSpotlight({ onAdd }) {
           </Reveal>
 
           <Reveal delay={0.3} className="spotlight__buy">
-            <button className="btn btn--terracotta" onClick={() => onAdd?.(size)}>
+            <button className="btn btn--terracotta" onClick={() => addToCart(size)}>
               <span>Add to Cart — {formatNaira(size.price)}</span>
             </button>
             <p className="spotlight__note">
-              New to oiling? <a href={ritualGuideLink}>See the 5-Minute Ritual Guide →</a>
+              New to oiling? <Link to={ritualGuideLink}>See the 5-Minute Ritual Guide →</Link>
             </p>
           </Reveal>
         </div>

@@ -1,13 +1,11 @@
-import { useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import Reveal from './Reveal'
-import ArticleReader from './ArticleReader'
-import { articles } from '../data'
+import { useRef } from 'react'
+import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import Reveal from '@/components/common/Reveal'
+import { articles } from '@/data'
 
-export default function Journal() {
+export default function JournalPreview() {
   const trackRef = useRef(null)
-  const [openId, setOpenId] = useState(null)
-  const openArticle = articles.find((a) => a.id === openId)
 
   const slide = (dir) => {
     const el = trackRef.current
@@ -52,7 +50,7 @@ export default function Journal() {
                 <p>{a.excerpt}</p>
                 <div className="j-card__foot">
                   <span>{a.minutes} min read</span>
-                  <button className="link-arrow" onClick={() => setOpenId(a.id)}>Read →</button>
+                  <Link className="link-arrow" to={`/journal/${a.id}`}>Read →</Link>
                 </div>
               </div>
             </motion.article>
@@ -60,19 +58,9 @@ export default function Journal() {
         </div>
 
         <Reveal className="journal__more" delay={0.1}>
-          <a href="#journal" className="btn btn--ghost"><span>Read More Wisdom</span></a>
+          <Link to="/journal" className="btn btn--ghost"><span>Read More Wisdom</span></Link>
         </Reveal>
       </div>
-
-      <AnimatePresence>
-        {openArticle && (
-          <ArticleReader
-            article={openArticle}
-            onClose={() => setOpenId(null)}
-            onOpen={(id) => setOpenId(id)}
-          />
-        )}
-      </AnimatePresence>
     </section>
   )
 }

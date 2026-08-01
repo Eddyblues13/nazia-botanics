@@ -1,54 +1,32 @@
-import { useCallback, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import Header from './components/Header'
-import Hero from './components/Hero'
-import ProductSpotlight from './components/ProductSpotlight'
-import WhySection from './components/WhySection'
-import Reviews from './components/Reviews'
-import Journal from './components/Journal'
-import FounderBanner from './components/FounderBanner'
-import Footer from './components/Footer'
-import './App.css'
+import { Route, Routes } from 'react-router-dom'
+import Layout from '@/components/layout/Layout'
+import Home from '@/pages/home/Home'
+import Shop from '@/pages/shop/Shop'
+import Journal from '@/pages/journal/Journal'
+import Article from '@/pages/journal/Article'
+import OurStory from '@/pages/our-story/OurStory'
+import Account from '@/pages/account/Account'
+import Contact from '@/pages/contact/Contact'
+import Privacy from '@/pages/legal/Privacy'
+import Terms from '@/pages/legal/Terms'
+import NotFound from '@/pages/NotFound'
+import '@/styles/App.css'
 
 export default function App() {
-  const [cart, setCart] = useState([])
-  const [toast, setToast] = useState(null)
-  const toastTimer = useRef(null)
-
-  const addToCart = useCallback((size) => {
-    setCart((c) => [...c, size])
-    setToast(`Added the ${size.label} Growth Oil to your ritual.`)
-    window.clearTimeout(toastTimer.current)
-    toastTimer.current = window.setTimeout(() => setToast(null), 3200)
-  }, [])
-
   return (
-    <>
-      <Header cartCount={cart.length} />
-      <main>
-        <Hero />
-        <ProductSpotlight onAdd={addToCart} />
-        <WhySection />
-        <Reviews />
-        <Journal />
-        <FounderBanner />
-      </main>
-      <Footer />
-
-      <AnimatePresence>
-        {toast && (
-          <motion.div
-            className="toast"
-            initial={{ opacity: 0, y: 30, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: 30, x: '-50%' }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <span className="toast__check">✓</span>
-            {toast}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="shop" element={<Shop />} />
+        <Route path="journal" element={<Journal />} />
+        <Route path="journal/:id" element={<Article />} />
+        <Route path="our-story" element={<OurStory />} />
+        <Route path="account" element={<Account />} />
+        <Route path="contact" element={<Contact />} />
+        <Route path="privacy" element={<Privacy />} />
+        <Route path="terms" element={<Terms />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   )
 }

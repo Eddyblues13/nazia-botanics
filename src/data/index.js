@@ -167,8 +167,49 @@ export const reviews = [
   { name: 'Osato E.', location: 'Benin City', rating: 5, text: 'I do the Sunday ritual with my daughters now. Their hairlines are thriving and it has become our little tradition.' },
 ]
 
-export const journalLink = '#journal'
-export const ritualGuideLink = '#journal'
+export const journalLink = '/journal'
+export const ritualGuideLink = '/journal/scalp-massage-ritual'
+
+export const pillars = [
+  {
+    n: '01',
+    title: 'Calm the nervous system',
+    body: 'Adaptogens like Ashwagandha lower the cortisol that drives stress-shedding — growth begins with calm.',
+  },
+  {
+    n: '02',
+    title: 'Feed the follicle',
+    body: 'Rosemary stimulates circulation at the root while hibiscus strengthens each strand from the inside out.',
+  },
+  {
+    n: '03',
+    title: 'Honour the ritual',
+    body: 'A few mindful minutes of scalp massage a week — Siro Abhyanga — turns care into a practice, not a chore.',
+  },
+]
+
+export const ingredients = [
+  {
+    name: 'Rosemary',
+    role: 'The Stimulator',
+    detail: 'Clinically shown to match 2% minoxidil at increasing hair count — by waking dormant follicles with fresh, oxygenated blood flow.',
+  },
+  {
+    name: 'Ashwagandha',
+    role: 'The Adaptogen',
+    detail: 'The king of adaptogens calms the scalp’s cortisol response, keeping follicles in their growth phase instead of survival mode.',
+  },
+  {
+    name: 'Hibiscus',
+    role: 'The Strengthener',
+    detail: 'Rich in amino acids that reinforce each strand from within, reducing breakage and adding a natural, healthy lustre.',
+  },
+  {
+    name: 'Bhringraj',
+    role: 'The King of Hair',
+    detail: 'Prized in Ayurveda for promoting growth, reducing hair fall and premature graying while deeply nourishing the follicle.',
+  },
+]
 
 export const social = {
   instagram: 'https://www.instagram.com/nazia_botanics/',

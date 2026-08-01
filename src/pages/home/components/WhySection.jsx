@@ -1,22 +1,6 @@
-import Reveal from './Reveal'
-
-const PILLARS = [
-  {
-    n: '01',
-    title: 'Calm the nervous system',
-    body: 'Adaptogens like Ashwagandha lower the cortisol that drives stress-shedding — growth begins with calm.',
-  },
-  {
-    n: '02',
-    title: 'Feed the follicle',
-    body: 'Rosemary stimulates circulation at the root while hibiscus strengthens each strand from the inside out.',
-  },
-  {
-    n: '03',
-    title: 'Honour the ritual',
-    body: 'A few mindful minutes of scalp massage a week — Siro Abhyanga — turns care into a practice, not a chore.',
-  },
-]
+import { Link } from 'react-router-dom'
+import Reveal from '@/components/common/Reveal'
+import { pillars } from '@/data'
 
 export default function WhySection() {
   return (
@@ -34,12 +18,12 @@ export default function WhySection() {
             — at the source, not the surface.
           </Reveal>
           <Reveal delay={0.15}>
-            <a href="#journal" className="link-arrow">Read the science →</a>
+            <Link to="/journal" className="link-arrow">Read the science →</Link>
           </Reveal>
         </div>
 
         <div className="why__pillars">
-          {PILLARS.map((p, i) => (
+          {pillars.map((p, i) => (
             <Reveal className="pillar" key={p.n} delay={i * 0.1}>
               <span className="pillar__n">{p.n}</span>
               <div>

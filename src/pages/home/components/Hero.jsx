@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import HeroSlider from './HeroSlider'
 
@@ -9,6 +10,8 @@ const fade = {
     transition: { duration: 0.9, delay: 0.3 + i * 0.15, ease: [0.22, 1, 0.36, 1] },
   }),
 }
+
+const trust = ['Cruelty-free', 'Cold-infused', 'Small batch']
 
 export default function Hero() {
   return (
@@ -33,19 +36,25 @@ export default function Hero() {
           </motion.p>
 
           <motion.div className="hero__cta" variants={fade} initial="hidden" animate="show" custom={3}>
-            <a href="#shop" className="btn">
+            <Link to="/shop" className="btn">
               <span>Shop the Ritual</span>
-            </a>
-            <a href="#story" className="link-arrow">
+            </Link>
+            <Link to="/our-story" className="link-arrow">
               Our Story →
-            </a>
+            </Link>
           </motion.div>
 
-          <motion.ul className="hero__trust" variants={fade} initial="hidden" animate="show" custom={4}>
-            <li>Cruelty-free</li>
-            <li>Cold-infused</li>
-            <li>Small batch</li>
-          </motion.ul>
+          <motion.div className="hero__trust" variants={fade} initial="hidden" animate="show" custom={4}>
+            <div className="hero__trust-track">
+              {[0, 1, 2, 3].map((copy) => (
+                <ul className="hero__trust-group" key={copy} aria-hidden={copy > 0 || undefined}>
+                  {trust.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              ))}
+            </div>
+          </motion.div>
         </div>
 
         <div className="hero__stage">

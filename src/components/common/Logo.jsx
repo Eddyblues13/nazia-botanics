@@ -1,11 +1,12 @@
-import logo from '../assets/logo.png'
+import { Link } from 'react-router-dom'
+import logo from '@/assets/logo.png'
 
 // Image mark for light backgrounds; variant="text" keeps the wordmark
 // for dark surfaces (footer) where the brown line art wouldn't read.
 export default function Logo({ compact = false, variant = 'image' }) {
   if (variant === 'text') {
     return (
-      <a href="#top" className={`brand ${compact ? 'brand--compact' : ''}`} aria-label="Nazia Botanics — home">
+      <Link to="/" className={`brand ${compact ? 'brand--compact' : ''}`} aria-label="Nazia Botanics — home">
         <span className="brand__leaf" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
             <path
@@ -24,13 +25,13 @@ export default function Logo({ compact = false, variant = 'image' }) {
           <span className="brand__name">Nazia</span>
           <span className="brand__sub">Botanics</span>
         </span>
-      </a>
+      </Link>
     )
   }
 
   return (
-    <a href="#top" className={`brand ${compact ? 'brand--compact' : ''}`} aria-label="Nazia Botanics — home">
+    <Link to="/" className={`brand ${compact ? 'brand--compact' : ''}`} aria-label="Nazia Botanics — home">
       <img className="brand__mark" src={logo} alt="Nazia Botanics" />
-    </a>
+    </Link>
   )
 }
