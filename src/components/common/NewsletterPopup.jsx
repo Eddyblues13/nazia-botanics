@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { social } from '@/data'
+import { subscribeToNewsletter } from '@/services/newsletterService'
 
 const SHOW_AFTER_MS = 30_000 // dwell time before we interrupt anyone
 const REMIND_AFTER_DAYS = 30
@@ -35,7 +36,9 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled])'
 export default function NewsletterPopup() {
   const [open, setOpen] = useState(false)
   const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [done, setDone] = useState(false)
+  const [error, setError] = useState('')
   const dialogRef = useRef(null)
   const inputRef = useRef(null)
 
@@ -110,12 +113,25 @@ export default function NewsletterPopup() {
     }
   }, [open])
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
-    if (!email) return
-    setDone(true)
-    writeState('subscribed')
-    setTimeout(() => setOpen(false), 2600)
+    if (!email || isSubmitting) return
+    setIsSubmitting(true)
+    setError('')
+    try {
+      const res = await subscribeToNewsletter(email)
+      if (res.success) {
+        setDone(true)
+        writeState('subscribed')
+        setTimeout(() => setOpen(false), 3200)
+      } else {
+        setError('Something went wrong. Please try again.')
+      }
+    } catch {
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -156,8 +172,8 @@ export default function NewsletterPopup() {
             {done ? (
               <div className="np__done">
                 <span className="np__check">✓</span>
-                <h2 id="np-title">Welcome to the ritual. 🌿</h2>
-                <p>Check your inbox — your code is on its way.</p>
+                <h2 id="np-title">Thank you for joining our community! 🌿</h2>
+                <p>Look out for our weekly wellness rituals in your inbox.</p>
               </div>
             ) : (
               <>
@@ -178,12 +194,14 @@ export default function NewsletterPopup() {
                     placeholder="Enter your email address"
                     aria-label="Email address"
                     value={email}
+                    disabled={isSubmitting}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  <button type="submit" className="btn btn--terracotta">
-                    <span>Join the list</span>
+                  <button type="submit" className="btn btn--terracotta" disabled={isSubmitting}>
+                    <span>{isSubmitting ? 'Joining list...' : 'Join the list'}</span>
                   </button>
                 </form>
+                {error && <p style={{ color: '#e57373', fontSize: '0.85rem', marginTop: '0.5rem' }}>{error}</p>}
 
                 <a
                   className="np__social"

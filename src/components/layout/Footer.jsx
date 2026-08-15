@@ -2,16 +2,32 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '@/components/common/Logo'
 import { social } from '@/data'
+import { subscribeToNewsletter } from '@/services/newsletterService'
 
 export default function Footer() {
   const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [done, setDone] = useState(false)
+  const [error, setError] = useState('')
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
-    if (!email) return
-    setDone(true)
-    setEmail('')
+    if (!email || isSubmitting) return
+    setIsSubmitting(true)
+    setError('')
+    try {
+      const res = await subscribeToNewsletter(email)
+      if (res.success) {
+        setDone(true)
+        setEmail('')
+      } else {
+        setError('Something went wrong. Please try again.')
+      }
+    } catch {
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -21,7 +37,10 @@ export default function Footer() {
           <Logo variant="text" />
           <h3>Join our community for weekly wellness rituals.</h3>
           {done ? (
-            <p className="footer__thanks">Welcome to the ritual — check your inbox. 🌿</p>
+            <div className="footer__thanks">
+              <p>✨ <strong>Thank you for joining our community!</strong></p>
+              <p>Look out for our weekly wellness rituals in your inbox. 🌿</p>
+            </div>
           ) : (
             <form className="footer__form" onSubmit={submit}>
               <input
@@ -30,11 +49,15 @@ export default function Footer() {
                 placeholder="Your email"
                 aria-label="Email address"
                 value={email}
+                disabled={isSubmitting}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <button type="submit" className="btn"><span>Subscribe</span></button>
+              <button type="submit" className="btn" disabled={isSubmitting}>
+                <span>{isSubmitting ? 'Subscribing...' : 'Subscribe'}</span>
+              </button>
             </form>
           )}
+          {error && <p className="footer__error" style={{ color: '#e57373', fontSize: '0.85rem', marginTop: '0.5rem' }}>{error}</p>}
         </div>
 
         <nav className="footer__links" aria-label="Footer">
