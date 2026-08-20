@@ -35,11 +35,11 @@ export default function Footer() {
       <div className="container footer__grid">
         <div className="footer__signup">
           <Logo variant="text" />
-          <h3>Join our community for weekly wellness rituals.</h3>
+          <h3>Join our community for weekly wellness routines.</h3>
           {done ? (
             <div className="footer__thanks">
               <p>✨ <strong>Thank you for joining our community!</strong></p>
-              <p>Look out for our weekly wellness rituals in your inbox. 🌿</p>
+              <p>Look out for our weekly wellness routines in your inbox. 🌿</p>
             </div>
           ) : (
             <form className="footer__form" onSubmit={submit}>
@@ -71,7 +71,7 @@ export default function Footer() {
             <h4>Learn</h4>
             <Link to="/journal">The Journal</Link>
             <Link to="/our-story">Our Story</Link>
-            <Link to="/journal/scalp-massage-ritual">Ritual Guide</Link>
+            <Link to="/journal/scalp-massage-ritual">Routine Guide</Link>
           </div>
           <div>
             <h4>Company</h4>
