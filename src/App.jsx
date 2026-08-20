@@ -16,6 +16,9 @@ import '@/styles/App.css'
 export default function App() {
   return (
     <Routes>
+      {/* Standalone: no header, footer or newsletter popup. */}
+      <Route path="waitlist" element={<Waitlist />} />
+
       <Route element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="shop" element={<Shop />} />
@@ -24,7 +27,6 @@ export default function App() {
         <Route path="our-story" element={<OurStory />} />
         <Route path="account" element={<Account />} />
         <Route path="contact" element={<Contact />} />
-        <Route path="waitlist" element={<Waitlist />} />
         <Route path="privacy" element={<Privacy />} />
         <Route path="terms" element={<Terms />} />
         <Route path="*" element={<NotFound />} />
