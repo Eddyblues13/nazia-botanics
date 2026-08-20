@@ -65,6 +65,7 @@ export default function Footer() {
             <h4>Shop</h4>
             <Link to="/shop">Growth Oil</Link>
             <Link to="/shop">Gift Sets</Link>
+            <Link to="/waitlist">Join the Waitlist</Link>
           </div>
           <div>
             <h4>Learn</h4>

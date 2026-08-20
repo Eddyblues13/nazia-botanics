@@ -1717,6 +1717,12 @@
   width: 100%;
   justify-content: center;
 }
+.form-card__error {
+  margin-top: 0.75rem;
+  color: #c0564f;
+  font-size: 0.88rem;
+  text-align: center;
+}
 .form-card__done {
   text-align: center;
   padding: 1rem 0;

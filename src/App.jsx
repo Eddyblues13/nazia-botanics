@@ -7,6 +7,7 @@ import Article from '@/pages/journal/Article'
 import OurStory from '@/pages/our-story/OurStory'
 import Account from '@/pages/account/Account'
 import Contact from '@/pages/contact/Contact'
+import Waitlist from '@/pages/waitlist/Waitlist'
 import Privacy from '@/pages/legal/Privacy'
 import Terms from '@/pages/legal/Terms'
 import NotFound from '@/pages/NotFound'
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="our-story" element={<OurStory />} />
         <Route path="account" element={<Account />} />
         <Route path="contact" element={<Contact />} />
+        <Route path="waitlist" element={<Waitlist />} />
         <Route path="privacy" element={<Privacy />} />
         <Route path="terms" element={<Terms />} />
         <Route path="*" element={<NotFound />} />
