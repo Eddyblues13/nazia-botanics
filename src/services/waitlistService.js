@@ -14,19 +14,18 @@ const emailjsConfig = () => {
 }
 
 /**
- * Adds an email to the product waitlist and notifies naziabotanics26@gmail.com.
+ * Adds a signup to the product waitlist and notifies naziabotanics26@gmail.com.
  *
  * Tries EmailJS first when it is configured, then falls back to FormSubmit so a
  * signup is never silently dropped. Unlike the newsletter service, a failure
  * here is reported honestly so the form can tell the visitor to try again.
  *
- * @param {string} email - The subscriber's email address.
- * @param {string} [name] - Optional first name, for a warmer notification.
+ * @param {{ email: string, phone?: string }} signup - The subscriber's details.
  * @returns {Promise<{ success: boolean, via?: string, message?: string }>}
  */
-export async function joinWaitlist(email, name = '') {
+export async function joinWaitlist({ email, phone = '' }) {
   const submittedAt = new Date().toLocaleString()
-  const who = name ? `${name} (${email})` : email
+  const who = phone ? `${email} / ${phone}` : email
 
   const config = emailjsConfig()
   if (config) {
@@ -37,9 +36,11 @@ export async function joinWaitlist(email, name = '') {
         {
           to_email: ADMIN_EMAIL,
           admin_email: ADMIN_EMAIL,
-          name: name || 'Waitlist signup',
+          name: 'Waitlist signup',
           email,
           subscriber_email: email,
+          phone,
+          subscriber_phone: phone,
           subject: `New waitlist signup: ${email}`,
           message: `${who} just joined the Nazia Botanics waitlist.`,
           subscribed_at: submittedAt,
@@ -58,8 +59,9 @@ export async function joinWaitlist(email, name = '') {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({
-        name: name || 'Waitlist signup',
+        name: 'Waitlist signup',
         email,
+        phone,
         _subject: `New waitlist signup: ${email}`,
         _template: 'table',
         message: `${who} just joined the Nazia Botanics waitlist on ${submittedAt}.`,

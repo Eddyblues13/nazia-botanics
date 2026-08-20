@@ -5,18 +5,18 @@ import { social } from '@/data'
 import { joinWaitlist } from '@/services/waitlistService'
 
 export default function Waitlist() {
-  const [form, setForm] = useState({ email: '' })
+  const [form, setForm] = useState({ email: '', phone: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState('')
 
   const submit = async (e) => {
     e.preventDefault()
-    if (!form.email || isSubmitting) return
+    if (!form.email || !form.phone || isSubmitting) return
     setIsSubmitting(true)
     setError('')
     try {
-      const res = await joinWaitlist(form.email)
+      const res = await joinWaitlist({ email: form.email, phone: form.phone })
       if (res.success) {
         setDone(true)
       } else {
@@ -67,6 +67,19 @@ export default function Waitlist() {
                     value={form.email}
                     disabled={isSubmitting}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  />
+                </label>
+                <label>
+                  Phone Number
+                  <input
+                    type="tel"
+                    required
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="Enter your phone number"
+                    value={form.phone}
+                    disabled={isSubmitting}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   />
                 </label>
                 <button type="submit" className="btn" disabled={isSubmitting}>
