@@ -1718,18 +1718,24 @@
   justify-content: center;
 }
 
-/* ---- Waitlist (standalone — write-up on screen, form in a modal) ---- */
+/* ---- Waitlist (standalone — write-up above a static, centred panel) ---- */
 .wl {
   min-height: 100vh;
   min-height: 100dvh;
-  display: grid;
-  align-content: start;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* `safe` keeps the top reachable when the content outgrows a short screen,
+     which plain centring would push out of scroll range. */
+  justify-content: center;
+  justify-content: safe center;
+  gap: clamp(1.75rem, 5vh, 3rem);
+  padding: clamp(2rem, 6vh, 4rem) clamp(1.15rem, 5vw, 2rem);
   text-align: center;
-  padding: clamp(3.25rem, 11vh, 7rem) clamp(1.15rem, 5vw, 2rem) 2rem;
 }
 .wl__intro {
   max-width: 44rem;
+  flex: none;
 }
 .wl__eyebrow {
   margin-bottom: 1rem;
@@ -1741,7 +1747,7 @@
 }
 .wl__title {
   font-family: var(--font-serif);
-  font-size: clamp(2rem, 5.2vw, 3.25rem);
+  font-size: clamp(1.95rem, 5vw, 3.15rem);
   font-weight: 500;
   line-height: 1.08;
   text-wrap: balance;
@@ -1754,69 +1760,16 @@
   text-wrap: pretty;
 }
 
-/* ---- Modal ---- */
-.wl__overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  display: flex;
-  justify-content: center;
-  /* Sits low so the write-up above it stays on screen. */
-  align-items: flex-end;
-}
-.wl__veil {
-  position: absolute;
-  inset: 0;
-  /* Barely there — enough for depth without greying out the cream page,
-     since the write-up behind has to stay readable. */
-  background: rgba(17, 17, 17, 0.08);
-}
+/* The panel keeps its lifted, modal-like presence without being dismissible. */
 .wl__dialog {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+  flex: none;
   width: 100%;
   max-width: 30rem;
-  max-height: 88dvh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
+  padding: clamp(1.5rem, 5vw, 2.25rem);
   background: var(--white);
-  border-radius: 26px 26px 0 0;
-  box-shadow: 0 -24px 60px -26px rgba(0, 0, 0, 0.45);
-  padding: 0 clamp(1.35rem, 5vw, 2.1rem)
-    calc(clamp(1.6rem, 5vw, 2.1rem) + env(safe-area-inset-bottom, 0px));
-}
-.wl__grab {
-  align-self: center;
-  display: grid;
-  place-items: center;
-  width: 100%;
-  padding: 0.85rem 0 1.15rem;
-  background: none;
-  border: none;
-}
-.wl__grab span {
-  display: block;
-  width: 42px;
-  height: 4px;
-  border-radius: 100px;
-  background: rgba(0, 0, 0, 0.16);
-}
-.wl__dock {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 55;
-  display: flex;
-  justify-content: center;
-  padding: 1rem clamp(1.15rem, 5vw, 2rem)
-    calc(1rem + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(to top, var(--cream) 58%, rgba(250, 249, 246, 0));
-}
-.wl__dock .wl__submit {
-  max-width: 30rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 34px 80px -38px rgba(0, 0, 0, 0.45);
 }
 
 /* ---- Form ---- */
@@ -1889,7 +1842,6 @@
 }
 .wl__done {
   text-align: center;
-  padding-bottom: 0.5rem;
 }
 .wl__check {
   display: grid;
@@ -1916,18 +1868,6 @@
   color: var(--ink);
   font-weight: 500;
   overflow-wrap: anywhere;
-}
-
-/* Laptop: the modal lifts off the bottom edge into a floating card. */
-@media (min-width: 720px) {
-  .wl__overlay {
-    padding-bottom: clamp(2rem, 7vh, 4.5rem);
-  }
-  .wl__dialog {
-    border-radius: var(--radius);
-    box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.5);
-    max-height: 80dvh;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
