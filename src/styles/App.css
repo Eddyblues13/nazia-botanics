@@ -1953,6 +1953,72 @@
 }
 
 /* Two-up from tablet landscape and wider. */
+/* ---- Phone: the form rides in a bottom sheet over the pitch ---- */
+.wl--phone .wl__aside {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+.wl__modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+.wl__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.5);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+.wl__sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 92dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--cream);
+  border-radius: 26px 26px 0 0;
+  box-shadow: 0 -24px 60px -24px rgba(0, 0, 0, 0.6);
+  /* Clear the home indicator / on-screen keyboard chrome. */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  will-change: transform;
+}
+.wl__grab {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  padding: 0.85rem 0 0.35rem;
+  background: none;
+  border: none;
+}
+.wl__grab span {
+  display: block;
+  width: 42px;
+  height: 4px;
+  border-radius: 100px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.wl__sheet-body {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 0.5rem clamp(1.25rem, 5vw, 1.9rem) clamp(1.5rem, 5vw, 2rem);
+}
+/* Dismissed state: a single bar to bring the sheet back. */
+.wl__dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 55;
+  padding: 0.9rem clamp(1.25rem, 5vw, 1.9rem)
+    calc(0.9rem + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to top, var(--ink) 62%, rgba(17, 17, 17, 0));
+}
+
 @media (min-width: 900px) {
   .wl {
     grid-template-columns: 1.05fr 1fr;
@@ -1967,6 +2033,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .wl__submit {
+    transition: none;
+  }
+  .wl__sheet,
+  .wl__modal,
+  .wl__dock {
     transition: none;
   }
   .wl__submit:hover:not(:disabled) {
