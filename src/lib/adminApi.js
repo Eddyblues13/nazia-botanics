@@ -1,6 +1,4 @@
-import { ApiError } from './api'
-
-const BASE_URL = (import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api').replace(/\/+$/, '')
+import { ApiError, BASE_URL } from './api'
 
 const TOKEN_KEY = 'nb-admin-token'
 

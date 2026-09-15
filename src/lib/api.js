@@ -1,4 +1,34 @@
-const BASE_URL = (import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api').replace(/\/+$/, '')
+const FALLBACK_URL = 'http://localhost:8000/api'
+
+/**
+ * Resolves the API base URL from the environment.
+ *
+ * A value with no scheme — "api.example.com/api" instead of
+ * "https://api.example.com/api" — is the one mistake that fails silently and
+ * confusingly: fetch treats it as a *relative* path, so a login POST from
+ * /admin lands on https://your-site.com/admin/api.example.com/api/admin/login
+ * and the SPA host answers 405. The scheme is added back here rather than
+ * leaving that to be rediscovered from a stack trace.
+ *
+ * A leading "/" is left alone — that is a deliberate same-origin path.
+ */
+function resolveBaseUrl(raw) {
+  const value = (raw ?? FALLBACK_URL).trim().replace(/\/+$/, '')
+
+  if (value === '') return FALLBACK_URL
+  if (/^https?:\/\//i.test(value) || value.startsWith('/')) return value
+
+  const fixed = `https://${value}`
+  if (import.meta.env.DEV) {
+    console.warn(
+      `VITE_API_URL is missing a scheme ("${value}"). Using "${fixed}". ` +
+        'Set it to the full URL, including https://, to silence this.'
+    )
+  }
+  return fixed
+}
+
+export const BASE_URL = resolveBaseUrl(import.meta.env.VITE_API_URL)
 
 export class ApiError extends Error {
   constructor(message, { status = 0, errors = {} } = {}) {

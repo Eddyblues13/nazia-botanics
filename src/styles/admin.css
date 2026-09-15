@@ -765,3 +765,43 @@
     margin: 16mm;
   }
 }
+
+/* ---------- Password field with reveal ---------- */
+.ad-password {
+  position: relative;
+  display: block;
+}
+.ad-password input {
+  width: 100%;
+  /* Room for the toggle, so a long password never runs under it. */
+  padding-right: 2.85rem;
+}
+.ad-password__toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ad-muted);
+  cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease;
+}
+.ad-password__toggle:hover:not(:disabled) {
+  color: var(--ad-ink, #111);
+  background: rgba(0, 0, 0, 0.05);
+}
+.ad-password__toggle:focus-visible {
+  outline: 2px solid var(--ad-ink, #111);
+  outline-offset: 1px;
+}
+.ad-password__toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}

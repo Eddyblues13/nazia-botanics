@@ -5,6 +5,7 @@ import { formatDateTime } from '@/lib/format'
 import { useAdminAuth } from '@/context/admin-auth-context'
 import { useToast } from '@/components/admin/toast-context'
 import { Badge, ErrorState, Field, Panel, Spinner, TableWrap } from '@/components/admin/ui'
+import PasswordInput from '@/components/admin/PasswordInput'
 
 const BLANK = {
   name: '',
@@ -162,8 +163,7 @@ export default function Team() {
               hint={editing ? 'Leave blank to keep the current one.' : 'At least 8 characters.'}
               error={fieldErrors.password}
             >
-              <input
-                type="password"
+              <PasswordInput
                 autoComplete="new-password"
                 required={!editing}
                 value={form.password}
@@ -172,8 +172,7 @@ export default function Team() {
             </Field>
 
             <Field label="Confirm password">
-              <input
-                type="password"
+              <PasswordInput
                 autoComplete="new-password"
                 required={!editing || Boolean(form.password)}
                 value={form.password_confirmation}

@@ -4,6 +4,7 @@ import { useAdminAuth } from '@/context/admin-auth-context'
 import { formatDateTime } from '@/lib/format'
 import { useToast } from '@/components/admin/toast-context'
 import { Badge, Field, Panel } from '@/components/admin/ui'
+import PasswordInput from '@/components/admin/PasswordInput'
 
 const BLANK = { current_password: '', password: '', password_confirmation: '' }
 
@@ -64,8 +65,7 @@ export default function Account() {
       <Panel title="Change your password">
         <form className="ad-form" onSubmit={submit}>
           <Field label="Current password" error={fieldErrors.current_password}>
-            <input
-              type="password"
+            <PasswordInput
               required
               autoComplete="current-password"
               value={form.current_password}
@@ -75,8 +75,7 @@ export default function Account() {
 
           <div className="ad-row">
             <Field label="New password" hint="At least 8 characters." error={fieldErrors.password}>
-              <input
-                type="password"
+              <PasswordInput
                 required
                 autoComplete="new-password"
                 value={form.password}
@@ -85,8 +84,7 @@ export default function Account() {
             </Field>
 
             <Field label="Confirm new password">
-              <input
-                type="password"
+              <PasswordInput
                 required
                 autoComplete="new-password"
                 value={form.password_confirmation}

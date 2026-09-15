@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAdminAuth } from '@/context/admin-auth-context'
 import { Field, Spinner } from '@/components/admin/ui'
+import PasswordInput from '@/components/admin/PasswordInput'
 
 export default function AdminLogin() {
   const { login, authenticated, checking } = useAdminAuth()
@@ -62,8 +63,7 @@ export default function AdminLogin() {
           </Field>
 
           <Field label="Password" error={fieldErrors.password}>
-            <input
-              type="password"
+            <PasswordInput
               required
               autoComplete="current-password"
               placeholder="••••••••"
