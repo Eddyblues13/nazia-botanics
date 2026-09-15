@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# The dashboard is private and has nothing to index.
+Disallow: /admin
+Disallow: /admin/
+# Personal, per-visitor pages.
+Disallow: /cart
+Disallow: /checkout
+Disallow: /order/
+Disallow: /account
+
+Sitemap: https://naziabotanics.com/sitemap.xml

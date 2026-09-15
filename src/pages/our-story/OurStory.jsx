@@ -2,8 +2,15 @@ import { Link } from 'react-router-dom'
 import PageHero from '@/components/common/PageHero'
 import Reveal from '@/components/common/Reveal'
 import { pillars } from '@/data'
+import { useSeo } from '@/hooks/useSeo'
 
 export default function OurStory() {
+  useSeo({
+    title: "Our Story",
+    description: "Why Nazia Botanics exists: small-batch, cold-infused botanicals formulated to treat shedding at its source, not the surface.",
+    path: "/our-story",
+  })
+
   return (
     <main className="page">
       <PageHero

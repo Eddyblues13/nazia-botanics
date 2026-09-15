@@ -1,6 +1,13 @@
 import PageHero from '@/components/common/PageHero'
+import { useSeo } from '@/hooks/useSeo'
 
 export default function Terms() {
+  useSeo({
+    title: "Terms",
+    description: "The terms that apply when you order from Nazia Botanics.",
+    path: "/terms",
+  })
+
   return (
     <main className="page">
       <PageHero eyebrow="Company" title="Terms of Service" lead="Last updated: July 2026" />

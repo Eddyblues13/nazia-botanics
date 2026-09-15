@@ -2,19 +2,109 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Nazia Botanics — Healthy hair starts from the root</title>
     <meta
       name="description"
-      content="Nazia Botanics — 100% botanical hair growth oil infused with Ashwagandha. Ancient Ayurvedic wisdom meets modern hair science."
+      content="Nazia Botanics — 100% botanical hair and scalp oil infused with Ashwagandha, rosemary, hibiscus and bhringraj. Cold-infused in small batches to treat shedding at its source."
     />
+    <link rel="canonical" href="https://naziabotanics.com/" />
+
+    <!-- Icons. The SVG carries a dark-mode variant; the PNGs are for iOS and
+         Android, which do not take SVG. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#2D3A2E" />
+
+    <!--
+      Link previews (WhatsApp, Facebook, LinkedIn, iMessage, Slack).
+
+      Every URL here is absolute: scrapers do not resolve relative paths, and a
+      relative og:image is the usual reason a preview shows text but no picture.
+      og:image is a PNG rather than the brand SVG because WhatsApp and most
+      other scrapers will not render SVG, and the explicit width/height let
+      them lay the card out before the image finishes downloading.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Nazia Botanics" />
+    <meta property="og:url" content="https://naziabotanics.com/" />
+    <meta property="og:title" content="Nazia Botanics — Healthy hair starts from the root" />
+    <meta
+      property="og:description"
+      content="100% botanical hair and scalp oil infused with Ashwagandha. Cold-infused in small batches to treat shedding at its source, not the surface."
+    />
+    <meta property="og:image" content="https://naziabotanics.com/og-image.png" />
+    <meta property="og:image:secure_url" content="https://naziabotanics.com/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Nazia Botanics — healthy hair starts from the root" />
+    <meta property="og:locale" content="en_NG" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Nazia Botanics — Healthy hair starts from the root" />
+    <meta
+      name="twitter:description"
+      content="100% botanical hair and scalp oil infused with Ashwagandha. Cold-infused in small batches to treat shedding at its source."
+    />
+    <meta name="twitter:image" content="https://naziabotanics.com/og-image.png" />
+    <meta name="twitter:image:alt" content="Nazia Botanics — healthy hair starts from the root" />
+
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&family=Parisienne&display=swap"
       rel="stylesheet"
     />
-    <title>Nazia Botanics — Healthy hair starts from the root</title>
+
+    <!-- Structured data. Tells search engines this is a real brand with a real
+         product, which is what earns the richer result layouts. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://naziabotanics.com/#organization",
+            "name": "Nazia Botanics",
+            "url": "https://naziabotanics.com/",
+            "logo": "https://naziabotanics.com/icon-512.png",
+            "image": "https://naziabotanics.com/og-image.png",
+            "description": "Small-batch, cold-infused botanical hair and scalp oil.",
+            "email": "naziabotanics26@gmail.com",
+            "sameAs": ["https://www.instagram.com/nazia_botanics"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://naziabotanics.com/#website",
+            "url": "https://naziabotanics.com/",
+            "name": "Nazia Botanics",
+            "publisher": { "@id": "https://naziabotanics.com/#organization" },
+            "inLanguage": "en"
+          },
+          {
+            "@type": "Product",
+            "name": "Botanical Growth Oil",
+            "description": "Scalp and hair oil, cold-infused with rosemary, ashwagandha, hibiscus and bhringraj to treat shedding at its source.",
+            "brand": { "@id": "https://naziabotanics.com/#organization" },
+            "image": "https://naziabotanics.com/og-image.png",
+            "url": "https://naziabotanics.com/shop",
+            "offers": {
+              "@type": "AggregateOffer",
+              "priceCurrency": "NGN",
+              "lowPrice": "15000",
+              "highPrice": "25000",
+              "offerCount": "2",
+              "availability": "https://schema.org/InStock"
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -3,8 +3,15 @@ import PageHero from '@/components/common/PageHero'
 import Reveal from '@/components/common/Reveal'
 import { sendContactMessage } from '@/lib/api'
 import { social } from '@/data'
+import { useSeo } from '@/hooks/useSeo'
 
 export default function Contact() {
+  useSeo({
+    title: "Contact",
+    description: "Questions about your ritual, an order or delivery? We reply to every message within one business day.",
+    path: "/contact",
+  })
+
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [sent, setSent] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)

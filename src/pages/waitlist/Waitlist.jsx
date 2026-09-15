@@ -1,8 +1,15 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { joinWaitlist } from '@/services/waitlistService'
+import { useSeo } from '@/hooks/useSeo'
 
 export default function Waitlist() {
+  useSeo({
+    title: "Join the Waitlist",
+    description: "Our batches are small and sell out. Join the waitlist to hear the moment the next one is ready.",
+    path: "/waitlist",
+  })
+
   const [form, setForm] = useState({ email: '', phone: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [done, setDone] = useState(false)

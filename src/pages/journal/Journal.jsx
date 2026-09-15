@@ -3,8 +3,15 @@ import { motion } from 'framer-motion'
 import PageHero from '@/components/common/PageHero'
 import ArticleVisual from '@/components/journal/ArticleVisual'
 import { useJournal } from '@/context/journal-context'
+import { useSeo } from '@/hooks/useSeo'
 
 export default function Journal() {
+  useSeo({
+    title: "The Journal",
+    description: "Wisdom, history and the science of healthy hair — from 5,000-year-old Ayurvedic rituals to landmark clinical studies.",
+    path: "/journal",
+  })
+
   const { articles } = useJournal()
 
   return (

@@ -4,8 +4,15 @@ import ProductSpotlight from '@/components/product/ProductSpotlight'
 import Reveal from '@/components/common/Reveal'
 import { useShop } from '@/context/shop-context'
 import { ingredients as fallbackIngredients, ritualGuideLink } from '@/data'
+import { useSeo } from '@/hooks/useSeo'
 
 export default function Shop() {
+  useSeo({
+    title: "Shop the Botanical Growth Oil",
+    description: "Botanical Growth Oil — cold-infused with rosemary, ashwagandha, hibiscus and bhringraj. Two sizes, small batches, made to treat shedding at its source.",
+    path: "/shop",
+  })
+
   const { product } = useShop()
   // The catalog carries its own ingredient list; the bundled one stands in
   // until it arrives.

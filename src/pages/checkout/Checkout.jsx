@@ -5,6 +5,7 @@ import Reveal from '@/components/common/Reveal'
 import { createOrder } from '@/lib/api'
 import { useCart } from '@/context/cart-context'
 import { formatNaira } from '@/lib/format'
+import { useSeo } from '@/hooks/useSeo'
 
 const EMPTY = {
   customer_name: '',
@@ -15,6 +16,13 @@ const EMPTY = {
 }
 
 export default function Checkout() {
+  useSeo({
+    title: "Checkout",
+    description: "Complete your order.",
+    path: "/checkout",
+    noindex: true,
+  })
+
   const { cart, subtotal, isEmpty, orderItems, clearCart } = useCart()
   const navigate = useNavigate()
 

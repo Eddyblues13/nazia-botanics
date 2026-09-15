@@ -1,6 +1,13 @@
 import PageHero from '@/components/common/PageHero'
+import { useSeo } from '@/hooks/useSeo'
 
 export default function Privacy() {
+  useSeo({
+    title: "Privacy Policy",
+    description: "How Nazia Botanics collects, uses and protects your information.",
+    path: "/privacy",
+  })
+
   return (
     <main className="page">
       <PageHero eyebrow="Company" title="Privacy Policy" lead="Last updated: July 2026" />

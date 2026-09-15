@@ -5,6 +5,7 @@ import { fetchArticle } from '@/lib/api'
 import { useAsyncData } from '@/hooks/useAsyncData'
 import { useJournal } from '@/context/journal-context'
 import { optimizedUrl, srcSetFor } from '@/lib/cloudinary'
+import { useSeo } from '@/hooks/useSeo'
 
 function Block({ block }) {
   if (block.type === 'h') return <h3>{block.text}</h3>
@@ -37,6 +38,13 @@ export default function Article() {
   // The bundled copy carries its body already, so an unreachable API still
   // renders the article rather than an error.
   const article = data?.data ?? getArticle(id)
+
+  // Each article carries its own title and excerpt into search results.
+  useSeo({
+    title: article?.title ?? 'The Journal',
+    description: article?.excerpt ?? undefined,
+    path: `/journal/${id}`,
+  })
 
   if (status === 'error' && !article) {
     // A missing article is a wrong URL; anything else is worth retrying.

@@ -5,8 +5,16 @@ import { useCart } from '@/context/cart-context'
 import { useShop } from '@/context/shop-context'
 import ProductVisual from '@/components/product/ProductVisual'
 import { formatNaira } from '@/lib/format'
+import { useSeo } from '@/hooks/useSeo'
 
 export default function Cart() {
+  useSeo({
+    title: "Your Cart",
+    description: "Your ritual, ready when you are.",
+    path: "/cart",
+    noindex: true,
+  })
+
   const { cart, subtotal, isEmpty, setQty, removeLine } = useCart()
   const { getProduct, product } = useShop()
 
