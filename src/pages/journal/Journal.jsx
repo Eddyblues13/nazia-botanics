@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import PageHero from '@/components/common/PageHero'
-import { articles } from '@/data'
+import ArticleVisual from '@/components/journal/ArticleVisual'
+import { useJournal } from '@/context/journal-context'
 
 export default function Journal() {
+  const { articles } = useJournal()
+
   return (
     <main className="page">
       <PageHero
@@ -18,7 +21,7 @@ export default function Journal() {
             {articles.map((a, i) => (
               <motion.article
                 key={a.id}
-                className={`j-card j-card--${a.tone}`}
+                className={`j-card j-card--${a.tone} ${a.image ? '' : 'j-card--text'}`}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 whileHover={{ y: -8 }}
@@ -26,11 +29,9 @@ export default function Journal() {
                 transition={{ duration: 0.7, delay: (i % 2) * 0.1, ease: [0.22, 1, 0.36, 1] }}
               >
                 <Link to={`/journal/${a.id}`} className="j-card__link" aria-label={a.title}>
-                  <div className="j-card__image">
-                    <span className="j-card__tag">{a.tag}</span>
-                    <span className="j-card__leaf" aria-hidden="true">❀</span>
-                  </div>
+                  <ArticleVisual article={a} />
                   <div className="j-card__body">
+                    {!a.image && <span className="j-card__tag j-card__tag--inline">{a.tag}</span>}
                     <h3>{a.title}</h3>
                     <p>{a.excerpt}</p>
                     <div className="j-card__foot">

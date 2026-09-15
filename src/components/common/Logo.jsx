@@ -1,37 +1,25 @@
 import { Link } from 'react-router-dom'
-import logo from '@/assets/logo.png'
+import logoDark from '@/assets/logo-dark.svg'
+import logoCream from '@/assets/logo-cream.svg'
 
-// Image mark for light backgrounds; variant="text" keeps the wordmark
-// for dark surfaces (footer) where the brown line art wouldn't read.
-export default function Logo({ compact = false, variant = 'image' }) {
-  if (variant === 'text') {
-    return (
-      <Link to="/" className={`brand ${compact ? 'brand--compact' : ''}`} aria-label="Nazia Botanics — home">
-        <span className="brand__leaf" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
-            <path
-              d="M12 21c0-6 .5-10 5-14-5 .3-9 2.6-9 8.5C8 18.2 9.6 20 12 21z"
-              fill="currentColor"
-              opacity="0.9"
-            />
-            <path
-              d="M12 21C12 14 9 9 4 6c.8 6.5 2.8 11.4 8 15z"
-              fill="currentColor"
-              opacity="0.55"
-            />
-          </svg>
-        </span>
-        <span className="brand__text">
-          <span className="brand__name">Nazia</span>
-          <span className="brand__sub">Botanics</span>
-        </span>
-      </Link>
-    )
-  }
+/**
+ * The full brand mark, in the two colourways it ships in: deep green for light
+ * surfaces and cream for dark ones (the footer).
+ *
+ * `variant="cream"` picks the light-on-dark artwork. The footer used to fall
+ * back to a hand-built leaf and wordmark because the old mark went invisible on
+ * the dark background; the cream export makes that unnecessary.
+ */
+export default function Logo({ compact = false, variant = 'dark' }) {
+  const src = variant === 'cream' ? logoCream : logoDark
 
   return (
-    <Link to="/" className={`brand ${compact ? 'brand--compact' : ''}`} aria-label="Nazia Botanics — home">
-      <img className="brand__mark" src={logo} alt="Nazia Botanics" />
+    <Link
+      to="/"
+      className={`brand ${compact ? 'brand--compact' : ''}`}
+      aria-label="Nazia Botanics — home"
+    >
+      <img className="brand__mark" src={src} alt="Nazia Botanics" />
     </Link>
   )
 }

@@ -119,13 +119,13 @@ export default function NewsletterPopup() {
     setIsSubmitting(true)
     setError('')
     try {
-      const res = await subscribeToNewsletter(email)
+      const res = await subscribeToNewsletter(email, 'popup')
       if (res.success) {
         setDone(true)
         writeState('subscribed')
         setTimeout(() => setOpen(false), 3200)
       } else {
-        setError('Something went wrong. Please try again.')
+        setError(res.message || 'Something went wrong. Please try again.')
       }
     } catch {
       setError('Something went wrong. Please try again.')
@@ -201,7 +201,11 @@ export default function NewsletterPopup() {
                     <span>{isSubmitting ? 'Joining list...' : 'Join the list'}</span>
                   </button>
                 </form>
-                {error && <p style={{ color: '#e57373', fontSize: '0.85rem', marginTop: '0.5rem' }}>{error}</p>}
+                {error && (
+                  <p className="np__error" role="alert">
+                    {error}
+                  </p>
+                )}
 
                 <a
                   className="np__social"

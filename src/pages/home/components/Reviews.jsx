@@ -1,6 +1,9 @@
+import { useCallback } from 'react'
 import { motion } from 'framer-motion'
 import Reveal from '@/components/common/Reveal'
-import { reviews } from '@/data'
+import { fetchReviews } from '@/lib/api'
+import { useAsyncData } from '@/hooks/useAsyncData'
+import { reviews as fallbackReviews } from '@/data'
 
 function Stars({ rating }) {
   return (
@@ -12,6 +15,12 @@ function Stars({ rating }) {
 }
 
 export default function Reviews() {
+  const fetcher = useCallback((signal) => fetchReviews(signal), [])
+  const { data } = useAsyncData(fetcher)
+
+  // The bundled reviews stand in until the approved ones arrive, so this
+  // section never renders empty.
+  const reviews = data?.data?.length ? data.data : fallbackReviews
   const average = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
 
   return (
@@ -30,7 +39,7 @@ export default function Reviews() {
         <div className="reviews__track">
           {reviews.map((r, i) => (
             <motion.blockquote
-              key={r.name}
+              key={r.id ?? r.name}
               className="review-card"
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}

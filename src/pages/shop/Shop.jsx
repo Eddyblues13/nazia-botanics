@@ -2,9 +2,15 @@ import { Link } from 'react-router-dom'
 import PageHero from '@/components/common/PageHero'
 import ProductSpotlight from '@/components/product/ProductSpotlight'
 import Reveal from '@/components/common/Reveal'
-import { ingredients, ritualGuideLink } from '@/data'
+import { useShop } from '@/context/shop-context'
+import { ingredients as fallbackIngredients, ritualGuideLink } from '@/data'
 
 export default function Shop() {
+  const { product } = useShop()
+  // The catalog carries its own ingredient list; the bundled one stands in
+  // until it arrives.
+  const ingredients = product.ingredients?.length ? product.ingredients : fallbackIngredients
+
   return (
     <main className="page">
       <PageHero

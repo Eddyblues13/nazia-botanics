@@ -26,8 +26,8 @@ export default function Hero() {
           </motion.p>
 
           <motion.h1 className="hero__title" variants={fade} initial="hidden" animate="show" custom={1}>
-            Nourish Your Roots,
-            <span className="hero__script">Calm Your Mind.</span>
+            Healthy hair starts
+            <span className="hero__script">from the root.</span>
           </motion.h1>
 
           <motion.p className="hero__sub" variants={fade} initial="hidden" animate="show" custom={2}>

@@ -1,8 +1,11 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from '@/components/common/Reveal'
+import ProductVisual from '@/components/product/ProductVisual'
 import { useCart } from '@/context/cart-context'
-import { product, ritualGuideLink, formatNaira } from '@/data'
+import { useShop } from '@/context/shop-context'
+import { formatNaira } from '@/lib/format'
+import { ritualGuideLink } from '@/data'
 
 function HighlightIcon({ type }) {
   const common = { width: 26, height: 26, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.3, strokeLinecap: 'round', strokeLinejoin: 'round' }
@@ -21,8 +24,14 @@ function HighlightIcon({ type }) {
 
 export default function ProductSpotlight() {
   const { addToCart } = useCart()
-  const [size, setSize] = useState(product.sizes[1])
+  const { product, loading } = useShop()
   const cardRef = useRef(null)
+
+  // Only the chosen label is held in state — the size itself is derived from
+  // whichever product is current. The bundled product stands in until the
+  // catalog arrives, and this re-points at the real one without an effect.
+  const [label, setLabel] = useState(null)
+  const size = product.sizes.find((s) => s.label === label) ?? product.sizes.at(-1)
 
   // Subtle 3D tilt toward the cursor.
   const handleMove = (e) => {
@@ -47,25 +56,11 @@ export default function ProductSpotlight() {
         <Reveal className="spotlight__visual">
           <div
             ref={cardRef}
-            className="bottle-card"
+            className={`bottle-card ${product.image ? 'bottle-card--photo' : ''}`}
             onMouseMove={handleMove}
             onMouseLeave={reset}
           >
-            <div className="bottle-card__glow" />
-            <div className="bottle-card__bottle">
-              <div className="bottle-card__cap" />
-              <div className="bottle-card__neck" />
-              <div className="bottle-card__body">
-                <div className="bottle-card__oil" />
-                <div className="bottle-card__label">
-                  <span className="bottle-card__brand">Nazia</span>
-                  <span className="bottle-card__type">Growth Oil</span>
-                  <span className="bottle-card__size">{size.label}</span>
-                </div>
-              </div>
-            </div>
-            <span className="bottle-card__sprig" aria-hidden="true">🌿</span>
-            <span className="bottle-card__bloom" aria-hidden="true">🌺</span>
+            <ProductVisual product={product} sizeLabel={size.label} priority />
           </div>
         </Reveal>
 
@@ -102,7 +97,7 @@ export default function ProductSpotlight() {
               <button
                 key={s.label}
                 className={`pill ${size.label === s.label ? 'pill--active' : ''}`}
-                onClick={() => setSize(s)}
+                onClick={() => setLabel(s.label)}
               >
                 {s.label}
               </button>
@@ -110,7 +105,11 @@ export default function ProductSpotlight() {
           </Reveal>
 
           <Reveal delay={0.3} className="spotlight__buy">
-            <button className="btn btn--terracotta" onClick={() => addToCart(size)}>
+            <button
+              className="btn btn--terracotta"
+              onClick={() => addToCart(size, product)}
+              disabled={loading}
+            >
               <span>Add to Cart — {formatNaira(size.price)}</span>
             </button>
             <p className="spotlight__note">

@@ -3,7 +3,7 @@ export const formatNaira = (n) => `₦${n.toLocaleString('en-NG')}`
 
 export const product = {
   name: 'Botanical Growth Oil',
-  tagline: 'Scalp & Strand Ritual Oil',
+  tagline: 'Scalp and Hair Oil',
   priceFrom: 15000,
   sizes: [
     { label: '2 oz', price: 15000 },

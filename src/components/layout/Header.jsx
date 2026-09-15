@@ -46,7 +46,7 @@ export default function Header({ cartCount = 0 }) {
         </nav>
 
         <div className="header__actions">
-          <Link to="/shop" className="header__cart" aria-label="Cart">
+          <Link to="/cart" className="header__cart" aria-label="Cart">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.4">
               <path d="M6 7h12l-1 12.5a1.5 1.5 0 0 1-1.5 1.4H8.5A1.5 1.5 0 0 1 7 19.5L6 7Z" />
               <path d="M9 7a3 3 0 0 1 6 0" />

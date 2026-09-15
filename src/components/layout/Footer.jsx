@@ -16,12 +16,12 @@ export default function Footer() {
     setIsSubmitting(true)
     setError('')
     try {
-      const res = await subscribeToNewsletter(email)
+      const res = await subscribeToNewsletter(email, 'footer')
       if (res.success) {
         setDone(true)
         setEmail('')
       } else {
-        setError('Something went wrong. Please try again.')
+        setError(res.message || 'Something went wrong. Please try again.')
       }
     } catch {
       setError('Something went wrong. Please try again.')
@@ -34,7 +34,7 @@ export default function Footer() {
     <footer className="footer" id="footer">
       <div className="container footer__grid">
         <div className="footer__signup">
-          <Logo variant="text" />
+          <Logo variant="cream" />
           <h3>Join our community for weekly wellness routines.</h3>
           {done ? (
             <div className="footer__thanks">

@@ -6,11 +6,11 @@ import NewsletterPopup from '@/components/common/NewsletterPopup'
 import { useCart } from '@/context/cart-context'
 
 export default function Layout() {
-  const { cart, toast } = useCart()
+  const { count, toast } = useCart()
 
   return (
     <>
-      <Header cartCount={cart.length} />
+      <Header cartCount={count} />
       <Outlet />
       <Footer />
       <NewsletterPopup />

@@ -1,16 +1,30 @@
 import { useState } from 'react'
 import PageHero from '@/components/common/PageHero'
 import Reveal from '@/components/common/Reveal'
+import { sendContactMessage } from '@/lib/api'
 import { social } from '@/data'
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [sent, setSent] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
-    if (!form.name || !form.email || !form.message) return
-    setSent(true)
+    if (!form.name || !form.email || !form.message || isSubmitting) return
+
+    setIsSubmitting(true)
+    setError('')
+
+    try {
+      await sendContactMessage(form)
+      setSent(true)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -43,6 +57,7 @@ export default function Contact() {
                     required
                     placeholder="Your name"
                     value={form.name}
+                    disabled={isSubmitting}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                   />
                 </label>
@@ -53,6 +68,7 @@ export default function Contact() {
                     required
                     placeholder="you@example.com"
                     value={form.email}
+                    disabled={isSubmitting}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                   />
                 </label>
@@ -63,10 +79,18 @@ export default function Contact() {
                     rows={5}
                     placeholder="How can we help?"
                     value={form.message}
+                    disabled={isSubmitting}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                   />
                 </label>
-                <button type="submit" className="btn"><span>Send message</span></button>
+                <button type="submit" className="btn" disabled={isSubmitting}>
+                  <span>{isSubmitting ? 'Sending…' : 'Send message'}</span>
+                </button>
+                {error && (
+                  <p className="form-card__error" role="alert">
+                    {error}
+                  </p>
+                )}
               </form>
             )}
           </Reveal>

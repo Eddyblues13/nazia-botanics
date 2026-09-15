@@ -1,6 +1,10 @@
+import { useCallback } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { articles } from '@/data'
+import { fetchArticle } from '@/lib/api'
+import { useAsyncData } from '@/hooks/useAsyncData'
+import { useJournal } from '@/context/journal-context'
+import { optimizedUrl, srcSetFor } from '@/lib/cloudinary'
 
 function Block({ block }) {
   if (block.type === 'h') return <h3>{block.text}</h3>
@@ -25,11 +29,42 @@ function Block({ block }) {
 
 export default function Article() {
   const { id } = useParams()
-  const article = articles.find((a) => a.id === id)
+  const { getArticle, isFallback } = useJournal()
 
-  if (!article) return <Navigate to="/journal" replace />
+  const fetcher = useCallback((signal) => fetchArticle(id, signal), [id])
+  const { data, status, error, reload } = useAsyncData(fetcher)
 
-  const next = article.next ? articles.find((a) => a.id === article.next.id) : null
+  // The bundled copy carries its body already, so an unreachable API still
+  // renders the article rather than an error.
+  const article = data?.data ?? getArticle(id)
+
+  if (status === 'error' && !article) {
+    // A missing article is a wrong URL; anything else is worth retrying.
+    if (error?.includes('404') || isFallback) return <Navigate to="/journal" replace />
+
+    return (
+      <main className="page">
+        <div className="container article-page__inner">
+          <p className="form-card__hint">{error}</p>
+          <button className="btn btn--ghost" onClick={reload}>
+            <span>Try again</span>
+          </button>
+        </div>
+      </main>
+    )
+  }
+
+  if (!article) {
+    return (
+      <main className="page">
+        <div className="container article-page__inner">
+          <p className="form-card__hint">Opening the journal…</p>
+        </div>
+      </main>
+    )
+  }
+
+  const next = article.next ? getArticle(article.next.id) : null
 
   return (
     <main className="page">
@@ -49,8 +84,20 @@ export default function Article() {
             <span className="article-page__meta">{article.minutes} min read</span>
           </header>
 
+          {article.image && (
+            <figure className="article-page__figure">
+              <img
+                src={optimizedUrl(article.image, { width: 1200 })}
+                srcSet={srcSetFor(article.image)}
+                sizes="(min-width: 900px) 760px, 90vw"
+                alt={article.title}
+                decoding="async"
+              />
+            </figure>
+          )}
+
           <div className="article-page__body">
-            {article.body.map((block, i) => (
+            {(article.body ?? []).map((block, i) => (
               <Block key={i} block={block} />
             ))}
           </div>

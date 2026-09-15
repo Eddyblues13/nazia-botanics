@@ -123,32 +123,10 @@
 }
 .brand__mark {
   display: block;
-  height: clamp(3.5rem, 5vw, 4.25rem);
+  /* The lockup is landscape (1.49:1), so it is set by height and allowed to
+     find its own width. */
+  height: clamp(3.1rem, 4.2vw, 3.9rem);
   width: auto;
-}
-.brand__leaf {
-  color: var(--sage-deep);
-  display: grid;
-  place-items: center;
-}
-.brand__text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-}
-.brand__name {
-  font-family: var(--font-script);
-  font-size: 1.7rem;
-  color: var(--ink);
-  line-height: 0.9;
-}
-.brand__sub {
-  font-family: var(--font-sans);
-  text-transform: uppercase;
-  letter-spacing: 0.42em;
-  font-size: 0.58rem;
-  color: var(--terracotta-deep);
-  padding-left: 2px;
 }
 
 /* ---------- Hero ---------- */
@@ -910,10 +888,6 @@
   color: rgba(255, 250, 240, 0.82);
   padding: clamp(3.5rem, 7vw, 5.5rem) clamp(1.25rem, 5vw, 3rem) 2rem;
 }
-.footer .brand__name,
-.footer .brand__sub {
-  color: var(--cream);
-}
 .footer__grid {
   display: grid;
   grid-template-columns: 1.2fr 1.4fr;
@@ -1409,8 +1383,10 @@
     padding: 3.75rem clamp(1.1rem, 5vw, 3rem);
   }
   .hero__stage {
-    height: 40vh;
-    min-height: 280px;
+    /* Portrait phones give the bottle little width, so the frame is given
+       more height instead — it runs down to just above the script line. */
+    height: 56vh;
+    min-height: 380px;
   }
   /* Narrower viewport = shorter loop, so speed it up to keep the drift even */
   .hero__trust-track {
@@ -1441,9 +1417,6 @@
 
 /* ---- Small phone ---- */
 @media (max-width: 400px) {
-  .brand__name {
-    font-size: 1.45rem;
-  }
   .bottle-card {
     border-radius: 22px;
   }
@@ -1968,4 +1941,353 @@
   display: inline-block;
   background: var(--cream-deep);
   border: 1px solid var(--line);
+}
+
+/* ---------- Cart, checkout & order status ---------- */
+.cart-layout {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cart-lines {
+  display: grid;
+  gap: 1rem;
+}
+.cart-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 1.25rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+@media (max-width: 560px) {
+  .cart-line {
+    grid-template-columns: auto 1fr auto;
+    gap: 0.9rem;
+  }
+  .cart-line__thumb {
+    width: 64px;
+  }
+  .cart-line__total {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+.cart-line__info h3 {
+  font-size: 1.15rem;
+}
+.cart-line__size {
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 0.2rem;
+}
+.cart-line__unit {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-top: 0.35rem;
+}
+.cart-line__qty {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.25rem;
+}
+.cart-line__qty button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 1.05rem;
+  line-height: 1;
+  color: var(--ink);
+  transition: background 0.25s var(--ease);
+}
+.cart-line__qty button:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+.cart-line__qty span {
+  min-width: 24px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.cart-line__total {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+}
+.cart-line__total strong {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+}
+.cart-line__remove {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cart-line__remove:hover {
+  color: var(--ink);
+}
+
+.cart-summary {
+  position: sticky;
+  top: 6rem;
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.5rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+@media (max-width: 860px) {
+  .cart-summary {
+    position: static;
+  }
+}
+.cart-summary h3 {
+  font-size: 1.25rem;
+}
+.cart-summary__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.92rem;
+}
+.cart-summary__row--total {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+  font-size: 1.05rem;
+}
+.cart-summary__row strong {
+  font-variant-numeric: tabular-nums;
+}
+.cart-summary__note {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.cart-summary__back {
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.cart-empty {
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
+  padding: clamp(2.5rem, 8vw, 5rem) 1.5rem;
+  text-align: center;
+}
+.cart-empty h3 {
+  font-size: 1.6rem;
+}
+.cart-empty p {
+  color: var(--ink-soft);
+}
+
+.form-card__error {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: #b3261e;
+}
+.form-card__optional {
+  color: var(--ink-soft);
+  font-size: 0.82em;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.np__error {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #d98b8b;
+}
+
+.order-card {
+  display: grid;
+  gap: 1.25rem;
+}
+.order-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.order-card__head h3 {
+  font-size: 1.4rem;
+  letter-spacing: 0.04em;
+}
+.order-card__lines {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.order-card__delivery {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.status-pill {
+  align-self: center;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.status-pill--confirmed,
+.status-pill--shipped {
+  border-color: rgba(0, 0, 0, 0.4);
+  color: var(--ink);
+}
+.status-pill--delivered {
+  border-color: rgba(46, 125, 50, 0.5);
+  color: #2e7d32;
+}
+.status-pill--cancelled {
+  border-color: rgba(179, 38, 30, 0.5);
+  color: #b3261e;
+}
+
+/* ---------------------------------------------------------------------------
+   Uploaded imagery
+   Product photography and journal artwork come from the dashboard, so every
+   slot has to look right both with a photo and with the hand-built fallback
+   it replaces.
+   --------------------------------------------------------------------------- */
+
+/* The spotlight frame becomes a plain window once a photo fills it — the
+   painted gradient and inner glow would only tint the photography. */
+.bottle-card--photo {
+  background: var(--sand, #efece6);
+  overflow: hidden;
+  padding: 0;
+}
+.product-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  display: block;
+}
+
+/* Cart thumbnails. */
+.cart-line__thumb {
+  width: 96px;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #ffffff, #e8e8e6);
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.cart-line__thumb .product-photo {
+  border-radius: 0;
+}
+.product-mark {
+  font-size: 1.9rem;
+  opacity: 0.45;
+}
+
+/* Journal card artwork sits under the tag badge. */
+.j-card__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Article hero. */
+.article-page__figure {
+  margin: 1.75rem 0 2.5rem;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 24px 50px -34px rgba(58, 46, 38, 0.5);
+}
+.article-page__figure img {
+  width: 100%;
+  /* Tall portraits are capped rather than cropped to a fixed band, so a
+     photograph never pushes the article body off the first screen. */
+  max-height: 60vh;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---------------------------------------------------------------------------
+   Journal cards without artwork
+   A tall empty band reads as a broken image, so an article with no picture
+   becomes a text-led card instead: the tag sits inline above the title and the
+   type gets the room the photograph would have taken.
+   --------------------------------------------------------------------------- */
+
+/* The palette is monochrome, so a coloured accent rule would read as a stray
+   bar rather than a tone. The type does the work instead. */
+.j-card--text .j-card__body {
+  padding: 1.6rem 1.5rem 1.5rem;
+}
+.j-card__tag--inline {
+  position: static;
+  display: inline-block;
+  /* The body is a flex column, which would otherwise stretch the pill to the
+     full card width. */
+  align-self: flex-start;
+  margin-bottom: 0.85rem;
+  background: var(--sand, #f1ece4);
+  border: 1px solid var(--line);
+}
+/* The headline carries the card, so it is given the photograph's emphasis. */
+.j-card--text .j-card__body h3 {
+  font-size: 1.45rem;
+  line-height: 1.25;
+}
+.j-card--text .j-card__body p {
+  margin-bottom: 1.5rem;
+}
+
+/* Text cards vary in title and excerpt length, so the footer is pushed to the
+   bottom edge and the "Read" links line up across the row. */
+.j-card--text {
+  display: flex;
+  flex-direction: column;
+}
+.j-card--text .j-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.j-card--text .j-card__foot {
+  margin-top: auto;
+}
+.j-card--text .j-card__link {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
