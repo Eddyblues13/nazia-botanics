@@ -20,6 +20,9 @@
   --font-script: 'Parisienne', cursive;
 
   --maxw: 1200px;
+  /* Side gutter for every centred block. Matches .header__inner so body
+     text lines up with the logo instead of touching the screen edge. */
+  --gutter: clamp(1.25rem, 5vw, 3rem);
   --radius: 18px;
   --shadow-soft: 0 24px 60px -28px rgba(58, 46, 38, 0.35);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -96,7 +99,8 @@ button {
 
 .container {
   width: 100%;
-  max-width: var(--maxw);
+  max-width: calc(var(--maxw) + 2 * var(--gutter));
+  padding-inline: var(--gutter);
   margin: 0 auto;
 }
 

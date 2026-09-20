@@ -36,7 +36,6 @@ export default function Cart() {
           {isEmpty ? (
             <Reveal className="cart-empty">
               <h3>Your cart is empty.</h3>
-              <p>One oil, two sizes, a whole ritual waiting.</p>
               <Link to="/shop" className="btn"><span>Visit the shop</span></Link>
             </Reveal>
           ) : (

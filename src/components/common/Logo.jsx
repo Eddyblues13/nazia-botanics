@@ -1,17 +1,16 @@
 import { Link } from 'react-router-dom'
-import logoDark from '@/assets/logo-dark.svg'
-import logoCream from '@/assets/logo-cream.svg'
+import markDark from '@/assets/icon-dark.svg'
+import markCream from '@/assets/icon-cream.svg'
 
 /**
- * The full brand mark, in the two colourways it ships in: deep green for light
- * surfaces and cream for dark ones (the footer).
+ * The brand mark: the leafed N on its own, in the two colourways it ships in —
+ * deep green for light surfaces and cream for dark ones (the footer).
  *
- * `variant="cream"` picks the light-on-dark artwork. The footer used to fall
- * back to a hand-built leaf and wordmark because the old mark went invisible on
- * the dark background; the cream export makes that unnecessary.
+ * The monogram is used rather than the stacked lockup with the wordmark, so the
+ * name is carried by the page itself instead of being repeated in the mark.
  */
 export default function Logo({ compact = false, variant = 'dark' }) {
-  const src = variant === 'cream' ? logoCream : logoDark
+  const src = variant === 'cream' ? markCream : markDark
 
   return (
     <Link

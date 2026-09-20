@@ -123,9 +123,10 @@
 }
 .brand__mark {
   display: block;
-  /* The lockup is landscape (1.49:1), so it is set by height and allowed to
-     find its own width. */
-  height: clamp(3.1rem, 4.2vw, 3.9rem);
+  /* The monogram is landscape (1.31:1) and, unlike the old stacked lockup, is
+     all mark and no wordmark — so it needs less height to read at the same
+     visual weight. */
+  height: clamp(2.3rem, 3.1vw, 2.9rem);
   width: auto;
 }
 
@@ -1449,7 +1450,7 @@
   text-align: center;
 }
 .page-hero__inner {
-  max-width: 760px;
+  max-width: calc(760px + 2 * var(--gutter));
 }
 .page-hero__title {
   font-size: clamp(2.4rem, 5.5vw, 4rem);
@@ -1494,7 +1495,7 @@
   padding: clamp(8rem, 14vh, 10rem) 0 clamp(3rem, 8vh, 5rem);
 }
 .article-page__inner {
-  max-width: 720px;
+  max-width: calc(720px + 2 * var(--gutter));
 }
 .article-page__back {
   display: inline-block;
@@ -1609,7 +1610,7 @@
   padding-top: 0;
 }
 .story__prose {
-  max-width: 680px;
+  max-width: calc(680px + 2 * var(--gutter));
 }
 .story__prose p {
   font-size: clamp(1.05rem, 1.8vw, 1.2rem);
@@ -1633,12 +1634,12 @@
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
   gap: clamp(1.5rem, 4vw, 3.5rem);
   align-items: start;
-  max-width: 960px;
+  max-width: calc(960px + 2 * var(--gutter));
 }
 /* Account has no sidebar, so it centres a single column */
 .form-wrap--single {
   grid-template-columns: minmax(0, 1fr);
-  max-width: 560px;
+  max-width: calc(560px + 2 * var(--gutter));
 }
 .form-card {
   background: var(--white);
@@ -1893,7 +1894,7 @@
 
 /* ---------- Legal pages ---------- */
 .legal {
-  max-width: 680px;
+  max-width: calc(680px + 2 * var(--gutter));
 }
 .legal h3 {
   font-size: 1.45rem;
@@ -2099,9 +2100,6 @@
 }
 .cart-empty h3 {
   font-size: 1.6rem;
-}
-.cart-empty p {
-  color: var(--ink-soft);
 }
 
 .form-card__error {
