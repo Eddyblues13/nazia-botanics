@@ -4,6 +4,7 @@ import PageHero from '@/components/common/PageHero'
 import Reveal from '@/components/common/Reveal'
 import { createOrder, fetchDeliveryZones } from '@/lib/api'
 import { useCart } from '@/context/cart-context'
+import { useCustomerAuth } from '@/context/customer-auth-context'
 import { formatNaira } from '@/lib/format'
 import { useSeo } from '@/hooks/useSeo'
 
@@ -25,8 +26,11 @@ export default function Checkout() {
   })
 
   const { cart, subtotal, isEmpty, orderItems, clearCart } = useCart()
+  const { customer } = useCustomerAuth()
   const navigate = useNavigate()
 
+  // A signed-in customer starts with their name and email already filled; the
+  // draft takes over the moment they change anything.
   const [form, setForm] = useState(EMPTY)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -57,8 +61,14 @@ export default function Checkout() {
 
   if (isEmpty) return <Navigate to="/cart" replace />
 
+  const prefilled = {
+    ...form,
+    customer_name: form.customer_name || (customer?.name ?? ''),
+    customer_email: form.customer_email || (customer?.email ?? ''),
+  }
+
   const field = (name) => ({
-    value: form[name],
+    value: prefilled[name],
     disabled: isSubmitting,
     onChange: (e) => setForm({ ...form, [name]: e.target.value }),
   })
@@ -72,7 +82,7 @@ export default function Checkout() {
     setFieldErrors({})
 
     try {
-      const payload = await createOrder({ ...form, items: orderItems })
+      const payload = await createOrder({ ...prefilled, items: orderItems })
 
       // The cart is only cleared once the order is safely recorded.
       clearCart()

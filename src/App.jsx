@@ -9,6 +9,8 @@ import Journal from '@/pages/journal/Journal'
 import Article from '@/pages/journal/Article'
 import OurStory from '@/pages/our-story/OurStory'
 import Account from '@/pages/account/Account'
+import SignIn from '@/pages/account/SignIn'
+import SignUp from '@/pages/account/SignUp'
 import Contact from '@/pages/contact/Contact'
 import Waitlist from '@/pages/waitlist/Waitlist'
 import Privacy from '@/pages/legal/Privacy'
@@ -50,6 +52,8 @@ export default function App() {
         <Route path="journal/:id" element={<Article />} />
         <Route path="our-story" element={<OurStory />} />
         <Route path="account" element={<Account />} />
+        <Route path="sign-in" element={<SignIn />} />
+        <Route path="sign-up" element={<SignUp />} />
         <Route path="contact" element={<Contact />} />
         <Route path="privacy" element={<Privacy />} />
         <Route path="terms" element={<Terms />} />

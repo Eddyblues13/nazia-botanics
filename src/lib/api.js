@@ -49,8 +49,44 @@ export class ApiError extends Error {
   }
 }
 
-async function request(path, { method = 'GET', body, signal } = {}) {
+/*
+ * The signed-in shopper's token.
+ *
+ * Deliberately a different key from the dashboard's, so a shopper and a member
+ * of staff can be signed in on the same browser without displacing each other.
+ */
+const CUSTOMER_TOKEN_KEY = 'nb-customer-token'
+
+export const getCustomerToken = () => {
+  try {
+    return localStorage.getItem(CUSTOMER_TOKEN_KEY)
+  } catch {
+    // Private browsing, or storage turned off. Treated as signed out.
+    return null
+  }
+}
+
+export const setCustomerToken = (token) => {
+  try {
+    localStorage.setItem(CUSTOMER_TOKEN_KEY, token)
+  } catch {
+    // Not fatal: the session lasts as long as the page does.
+  }
+}
+
+export const clearCustomerToken = () => {
+  try {
+    localStorage.removeItem(CUSTOMER_TOKEN_KEY)
+  } catch {
+    // Nothing to clear.
+  }
+}
+
+async function request(path, { method = 'GET', body, signal, auth = false } = {}) {
   let response
+  // `auth` is opt-in: the catalog and checkout work signed out, and sending a
+  // token where it is not needed only widens where it can leak.
+  const token = auth ? getCustomerToken() : null
 
   try {
     response = await fetch(`${BASE_URL}${path}`, {
@@ -58,6 +94,7 @@ async function request(path, { method = 'GET', body, signal } = {}) {
       signal,
       headers: {
         Accept: 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(body ? { 'Content-Type': 'application/json' } : {}),
       },
       body: body ? JSON.stringify(body) : undefined,
@@ -97,7 +134,8 @@ export const submitReview = (review) => request('/reviews', { method: 'POST', bo
 /* orders */
 export const fetchDeliveryZones = (signal) => request('/delivery-zones', { signal })
 
-export const createOrder = (order) => request('/orders', { method: 'POST', body: order })
+export const createOrder = (order) =>
+  request('/orders', { method: 'POST', body: order, auth: true })
 
 /**
  * Asks the server to check a payment with Paystack.
@@ -116,3 +154,23 @@ export const sendContactMessage = (message) => request('/contact', { method: 'PO
 export const joinWaitlist = (signup) => request('/waitlist', { method: 'POST', body: signup })
 export const subscribeToNewsletter = (email, source = 'popup') =>
   request('/newsletter', { method: 'POST', body: { email, source } })
+
+/* customer accounts */
+
+export const registerCustomer = (body) =>
+  request('/account/register', { method: 'POST', body })
+
+export const loginCustomer = (credentials) =>
+  request('/account/login', { method: 'POST', body: credentials })
+
+export const fetchCustomer = (signal) => request('/account/me', { signal, auth: true })
+
+export const logoutCustomer = () => request('/account/logout', { method: 'POST', auth: true })
+
+export const fetchMyOrders = (signal) => request('/account/orders', { signal, auth: true })
+
+export const updateCustomerProfile = (body) =>
+  request('/account/profile', { method: 'PUT', body, auth: true })
+
+export const updateCustomerPassword = (body) =>
+  request('/account/password', { method: 'PUT', body, auth: true })

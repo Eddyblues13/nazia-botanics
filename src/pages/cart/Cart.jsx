@@ -28,7 +28,7 @@ export default function Cart() {
       <PageHero
         eyebrow="Your Cart"
         title="Your ritual, ready when you are."
-        lead="Delivery is arranged after checkout — we confirm every order personally."
+        lead="Choose your state at checkout to see delivery, then pay the full total in one go."
       />
 
       <section className="section">
@@ -91,8 +91,8 @@ export default function Cart() {
                   <strong>{formatNaira(subtotal)}</strong>
                 </div>
                 <p className="cart-summary__note">
-                  Delivery is quoted when we confirm your order, so you always know
-                  the total before anything ships.
+                  Delivery is added at checkout once you choose your state, so you
+                  see the full total before you pay.
                 </p>
                 <Link to="/checkout" className="btn btn--terracotta">
                   <span>Proceed to checkout</span>
