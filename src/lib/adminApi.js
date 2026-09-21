@@ -115,6 +115,7 @@ async function download(path, fallbackName) {
 export const adminLogin = (credentials) => request('/login', { method: 'POST', body: credentials })
 export const adminMe = (signal) => request('/me', { signal })
 export const adminLogout = () => request('/logout', { method: 'POST' })
+export const adminUpdateProfile = (body) => request('/profile', { method: 'PUT', body })
 export const adminUpdatePassword = (body) => request('/password', { method: 'PUT', body })
 
 /* dashboard */

@@ -105,6 +105,15 @@ export default function Products() {
                 </td>
                 <td>
                   <div className="ad-table__actions">
+                    {/* The product name links here too, but an explicit action
+                        matches every other table and is the one people look
+                        for. */}
+                    <Link
+                      className="ad-btn ad-btn--ghost ad-btn--sm"
+                      to={`/admin/products/${product.slug}/edit`}
+                    >
+                      Edit
+                    </Link>
                     <button
                       className="ad-btn ad-btn--ghost ad-btn--sm"
                       onClick={() => toggle(product)}

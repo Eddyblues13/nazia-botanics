@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { adminUpdatePassword } from '@/lib/adminApi'
+import { adminUpdatePassword, adminUpdateProfile } from '@/lib/adminApi'
 import { useAdminAuth } from '@/context/admin-auth-context'
 import { formatDateTime } from '@/lib/format'
 import { useToast } from '@/components/admin/toast-context'
@@ -9,14 +9,46 @@ import PasswordInput from '@/components/admin/PasswordInput'
 const BLANK = { current_password: '', password: '', password_confirmation: '' }
 
 export default function Account() {
-  const { admin } = useAdminAuth()
+  const { admin, setAdmin } = useAdminAuth()
   const toast = useToast()
 
   const [form, setForm] = useState(BLANK)
   const [isSaving, setIsSaving] = useState(false)
   const [fieldErrors, setFieldErrors] = useState({})
 
+  // Only the edits are held locally; everything else is read from the admin in
+  // context. The admin arrives a tick after mount, and deriving it this way
+  // means the form fills when it lands without an effect to keep in sync.
+  const [draft, setDraft] = useState(null)
+  const [isSavingProfile, setIsSavingProfile] = useState(false)
+  const [profileErrors, setProfileErrors] = useState({})
+
+  const profile = draft ?? { name: admin?.name ?? '', email: admin?.email ?? '' }
+
   const set = (name, value) => setForm((f) => ({ ...f, [name]: value }))
+  const setProfileField = (name, value) => setDraft({ ...profile, [name]: value })
+
+  const saveProfile = async (e) => {
+    e.preventDefault()
+    if (isSavingProfile) return
+
+    setIsSavingProfile(true)
+    setProfileErrors({})
+
+    try {
+      const payload = await adminUpdateProfile(profile)
+      // Refreshed in context too, so the name in the sidebar changes with it.
+      setAdmin(payload.data)
+      // Dropping the draft hands the form back to the saved values.
+      setDraft(null)
+      toast.success('Profile updated.')
+    } catch (err) {
+      setProfileErrors(err.errors ?? {})
+      toast.error(err.message)
+    } finally {
+      setIsSavingProfile(false)
+    }
+  }
 
   const submit = async (e) => {
     e.preventDefault()
@@ -39,16 +71,44 @@ export default function Account() {
 
   return (
     <>
+      <Panel title="Your details">
+        <form className="ad-form" onSubmit={saveProfile}>
+          <div className="ad-row">
+            <Field label="Name" error={profileErrors.name}>
+              <input
+                type="text"
+                required
+                value={profile.name}
+                disabled={isSavingProfile}
+                onChange={(e) => setProfileField('name', e.target.value)}
+              />
+            </Field>
+
+            <Field
+              label="Email address"
+              hint="This is also what you sign in with."
+              error={profileErrors.email}
+            >
+              <input
+                type="email"
+                required
+                value={profile.email}
+                disabled={isSavingProfile}
+                onChange={(e) => setProfileField('email', e.target.value)}
+              />
+            </Field>
+          </div>
+
+          <div className="ad-actions">
+            <button type="submit" className="ad-btn" disabled={isSavingProfile}>
+              {isSavingProfile ? 'Saving…' : 'Save details'}
+            </button>
+          </div>
+        </form>
+      </Panel>
+
       <Panel title="Your account">
         <dl className="ad-dl">
-          <div>
-            <dt>Name</dt>
-            <dd>{admin?.name}</dd>
-          </div>
-          <div>
-            <dt>Email</dt>
-            <dd>{admin?.email}</dd>
-          </div>
           <div>
             <dt>Role</dt>
             <dd>
