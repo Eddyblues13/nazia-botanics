@@ -172,3 +172,10 @@ export const fetchTeam = (signal) => request('/team', { signal })
 export const createTeamMember = (body) => request('/team', { method: 'POST', body })
 export const updateTeamMember = (id, body) => request(`/team/${id}`, { method: 'PUT', body })
 export const deleteTeamMember = (id) => request(`/team/${id}`, { method: 'DELETE' })
+
+/* delivery zones */
+export const fetchDeliveryZonesAdmin = (signal) => request('/delivery-zones', { signal })
+export const createDeliveryZone = (body) => request('/delivery-zones', { method: 'POST', body })
+export const updateDeliveryZone = (id, body) =>
+  request(`/delivery-zones/${id}`, { method: 'PUT', body })
+export const deleteDeliveryZone = (id) => request(`/delivery-zones/${id}`, { method: 'DELETE' })

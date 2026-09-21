@@ -79,7 +79,7 @@ export default function Orders() {
         <EmptyState title="No orders here" hint="Try clearing the filters above." />
       ) : (
         <>
-          <TableWrap head={['Reference', 'Customer', 'Items', 'Total', 'Placed', 'Status', '']}>
+          <TableWrap head={['Reference', 'Customer', 'Items', 'Total', 'Payment', 'Placed', 'Status', '']}>
             {rows.map((order) => (
               <tr key={order.id}>
                 <td>
@@ -93,7 +93,10 @@ export default function Orders() {
                   <span className="ad-field__hint">{order.customer_phone}</span>
                 </td>
                 <td className="ad-mono">{order.items_count}</td>
-                <td className="ad-mono">{formatNaira(order.subtotal)}</td>
+                <td className="ad-mono">{formatNaira(order.total ?? order.subtotal)}</td>
+                <td>
+                  <Badge status={order.payment_status ?? 'unpaid'} />
+                </td>
                 <td>{formatDateTime(order.placed_at)}</td>
                 <td>
                   <Badge status={order.status} />

@@ -28,6 +28,7 @@ import AdminMessages from '@/pages/admin/Messages'
 import AdminReviews from '@/pages/admin/Reviews'
 import AdminWaitlist from '@/pages/admin/Waitlist'
 import AdminSubscribers from '@/pages/admin/Subscribers'
+import AdminDelivery from '@/pages/admin/Delivery'
 import AdminTeam from '@/pages/admin/Team'
 import AdminAccount from '@/pages/admin/Account'
 import '@/styles/App.css'
@@ -78,6 +79,7 @@ export default function App() {
         <Route path="reviews" element={<AdminReviews />} />
         <Route path="waitlist" element={<AdminWaitlist />} />
         <Route path="subscribers" element={<AdminSubscribers />} />
+        <Route path="delivery" element={<AdminDelivery />} />
         <Route
           path="team"
           element={

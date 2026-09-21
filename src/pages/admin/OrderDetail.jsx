@@ -89,6 +89,28 @@ export default function OrderDetail() {
             <dd>{order.delivery_address}</dd>
           </div>
           <div>
+            <dt>Delivery area</dt>
+            <dd>
+              {order.delivery_state
+                ? `${order.delivery_state} · ${formatNaira(order.delivery_fee)} · ${order.delivery_period}`
+                : '—'}
+            </dd>
+          </div>
+          <div>
+            <dt>Payment</dt>
+            <dd>
+              {order.payment_status === 'paid'
+                ? `${formatNaira(order.amount_paid)} paid${
+                    order.payment_channel ? ` by ${order.payment_channel}` : ''
+                  } · ${formatDateTime(order.paid_at)}`
+                : (order.payment_status ?? 'unpaid')}
+            </dd>
+          </div>
+          <div>
+            <dt>Paystack reference</dt>
+            <dd className="ad-mono">{order.payment_reference ?? '—'}</dd>
+          </div>
+          <div>
             <dt>Note</dt>
             <dd>{order.note ?? '—'}</dd>
           </div>
@@ -136,11 +158,19 @@ export default function OrderDetail() {
             </tr>
           ))}
           <tr>
+            <td colSpan={4}>Subtotal</td>
+            <td className="ad-mono">{formatNaira(order.subtotal)}</td>
+          </tr>
+          <tr>
+            <td colSpan={4}>Delivery</td>
+            <td className="ad-mono">{formatNaira(order.delivery_fee ?? 0)}</td>
+          </tr>
+          <tr>
             <td colSpan={4}>
-              <strong>Subtotal</strong>
+              <strong>{order.payment_status === 'paid' ? 'Paid' : 'Total'}</strong>
             </td>
             <td className="ad-mono">
-              <strong>{formatNaira(order.subtotal)}</strong>
+              <strong>{formatNaira(order.total ?? order.subtotal)}</strong>
             </td>
           </tr>
         </TableWrap>

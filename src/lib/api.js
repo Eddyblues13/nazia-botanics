@@ -31,10 +31,14 @@ function resolveBaseUrl(raw) {
 export const BASE_URL = resolveBaseUrl(import.meta.env.VITE_API_URL)
 
 export class ApiError extends Error {
-  constructor(message, { status = 0, errors = {} } = {}) {
+  constructor(message, { status = 0, errors = {}, data = null } = {}) {
     super(message)
     this.name = 'ApiError'
     this.status = status
+    // The response body, for the cases where a rejection still carries
+    // something worth showing — a declined payment comes back 402 with the
+    // order attached.
+    this.data = data
     // Laravel's { field: [message] } validation bag, flattened to first message.
     this.errors = Object.fromEntries(
       Object.entries(errors).map(([field, messages]) => [
@@ -69,6 +73,7 @@ async function request(path, { method = 'GET', body, signal } = {}) {
     throw new ApiError(payload?.message ?? `Something went wrong (${response.status}).`, {
       status: response.status,
       errors: payload?.errors ?? {},
+      data: payload,
     })
   }
 
@@ -90,7 +95,19 @@ export const fetchReviews = (signal) => request('/reviews', { signal })
 export const submitReview = (review) => request('/reviews', { method: 'POST', body: review })
 
 /* orders */
+export const fetchDeliveryZones = (signal) => request('/delivery-zones', { signal })
+
 export const createOrder = (order) => request('/orders', { method: 'POST', body: order })
+
+/**
+ * Asks the server to check a payment with Paystack.
+ *
+ * Called when the customer lands back on their order page. Returning here
+ * proves nothing on its own — the server is the one that asks Paystack what
+ * really happened.
+ */
+export const verifyPayment = (reference) =>
+  request(`/orders/${encodeURIComponent(reference)}/verify-payment`, { method: 'POST' })
 export const fetchOrder = (reference, signal) =>
   request(`/orders/${encodeURIComponent(reference)}`, { signal })
 

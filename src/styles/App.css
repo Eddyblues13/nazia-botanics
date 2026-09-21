@@ -1667,13 +1667,18 @@
   margin-bottom: 1.2rem;
 }
 .form-card input,
-.form-card textarea {
+.form-card textarea,
+.form-card select {
   display: block;
   width: 100%;
   margin-top: 0.45rem;
   padding: 0.85rem 1rem;
   font: inherit;
   font-size: 0.98rem;
+  /* Stated rather than inherited: an input and a select default to different
+     line-heights, which is what left the select a pixel short of its
+     neighbours. */
+  line-height: 1.5;
   color: var(--ink);
   background: var(--cream);
   border: 1px solid var(--line);
@@ -1683,9 +1688,35 @@
   resize: vertical;
 }
 .form-card input:focus,
-.form-card textarea:focus {
+.form-card textarea:focus,
+.form-card select:focus {
   border-color: var(--ink);
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+/* A select styles nothing like an input until its native appearance is
+   dropped, which also removes the arrow — so one is drawn back on as a
+   background image. */
+.form-card select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.75rem;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%232D3A2E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  /* Keeps the cream fill from painting over the arrow. */
+  background-size: 12px 8px;
+  text-overflow: ellipsis;
+}
+/* The option list is drawn by the OS, so only its colours are ours to set. */
+.form-card select option {
+  color: var(--ink);
+  background: var(--white);
+}
+.form-card select:invalid {
+  /* The placeholder option, styled like a placeholder rather than an answer. */
+  color: var(--ink-soft);
 }
 .form-card .btn {
   width: 100%;
@@ -2166,8 +2197,15 @@
   border-color: rgba(46, 125, 50, 0.5);
   color: #2e7d32;
 }
-.status-pill--cancelled {
+.status-pill--cancelled,
+/* Payment states, shown in place of the fulfilment status until an order is
+   paid for — an unpaid order has not really started yet. */
+.status-pill--failed {
   border-color: rgba(179, 38, 30, 0.5);
+  color: #b3261e;
+}
+.status-pill--unpaid {
+  border-color: rgba(179, 38, 30, 0.35);
   color: #b3261e;
 }
 

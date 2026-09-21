@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import PageHero from '@/components/common/PageHero'
 import Reveal from '@/components/common/Reveal'
-import { createOrder } from '@/lib/api'
+import { createOrder, fetchDeliveryZones } from '@/lib/api'
 import { useCart } from '@/context/cart-context'
 import { formatNaira } from '@/lib/format'
 import { useSeo } from '@/hooks/useSeo'
@@ -12,6 +12,7 @@ const EMPTY = {
   customer_phone: '',
   customer_email: '',
   delivery_address: '',
+  delivery_state: '',
   note: '',
 }
 
@@ -30,6 +31,29 @@ export default function Checkout() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [fieldErrors, setFieldErrors] = useState({})
+  const [zones, setZones] = useState([])
+  const [zonesFailed, setZonesFailed] = useState(false)
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    fetchDeliveryZones(controller.signal)
+      .then((payload) => setZones(payload.data ?? []))
+      .catch((err) => {
+        if (err.name !== 'AbortError') setZonesFailed(true)
+      })
+
+    return () => controller.abort()
+  }, [])
+
+  // The fee shown is the zone's; the server charges from the same table, so
+  // what is quoted here is what is taken.
+  const zone = useMemo(
+    () => zones.find((z) => z.state === form.delivery_state) ?? null,
+    [zones, form.delivery_state]
+  )
+  const deliveryFee = zone?.fee ?? 0
+  const total = subtotal + deliveryFee
 
   if (isEmpty) return <Navigate to="/cart" replace />
 
@@ -49,8 +73,21 @@ export default function Checkout() {
 
     try {
       const payload = await createOrder({ ...form, items: orderItems })
+
       // The cart is only cleared once the order is safely recorded.
       clearCart()
+
+      const authorizationUrl = payload.payment?.authorization_url
+
+      if (authorizationUrl) {
+        // Hand the customer to Paystack. `replace` so the back button returns
+        // them to the shop rather than re-submitting the order.
+        window.location.replace(authorizationUrl)
+        return
+      }
+
+      // No payment URL came back; the order exists, so show it rather than
+      // leaving them on a form that looks like it failed.
       navigate(`/order/${payload.data.reference}`, { replace: true })
     } catch (err) {
       setError(err.message)
@@ -96,8 +133,13 @@ export default function Checkout() {
               )}
 
               <label>
-                Email address <span className="form-card__optional">(optional)</span>
-                <input type="email" placeholder="you@example.com" {...field('customer_email')} />
+                Email address
+                <input
+                  type="email"
+                  required
+                  placeholder="you@example.com"
+                  {...field('customer_email')}
+                />
               </label>
               {fieldErrors.customer_email && (
                 <p className="form-card__error">{fieldErrors.customer_email}</p>
@@ -117,12 +159,34 @@ export default function Checkout() {
               )}
 
               <label>
+                State
+                <select required {...field('delivery_state')}>
+                  <option value="">Choose your state</option>
+                  {zones.map((z) => (
+                    <option key={z.state} value={z.state}>
+                      {z.state} — {formatNaira(z.fee)} · {z.delivery_period}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {zonesFailed && (
+                <p className="form-card__error">
+                  We could not load delivery areas. Please refresh and try again.
+                </p>
+              )}
+              {fieldErrors.delivery_state && (
+                <p className="form-card__error">{fieldErrors.delivery_state}</p>
+              )}
+
+              <label>
                 Anything we should know? <span className="form-card__optional">(optional)</span>
                 <textarea rows={2} placeholder="Landmark, delivery window…" {...field('note')} />
               </label>
 
               <button type="submit" className="btn btn--terracotta" disabled={isSubmitting}>
-                <span>{isSubmitting ? 'Placing your order…' : 'Place order'}</span>
+                <span>
+                  {isSubmitting ? 'Taking you to Paystack…' : `Pay ${formatNaira(total)}`}
+                </span>
               </button>
 
               {error && (
@@ -143,12 +207,22 @@ export default function Checkout() {
                 <strong>{formatNaira(line.price * line.qty)}</strong>
               </div>
             ))}
-            <div className="cart-summary__row cart-summary__row--total">
+            <div className="cart-summary__row">
               <span>Subtotal</span>
               <strong>{formatNaira(subtotal)}</strong>
             </div>
+            <div className="cart-summary__row">
+              <span>Delivery{zone ? ` · ${zone.state}` : ''}</span>
+              <strong>{zone ? formatNaira(deliveryFee) : '—'}</strong>
+            </div>
+            <div className="cart-summary__row cart-summary__row--total">
+              <span>Total</span>
+              <strong>{formatNaira(total)}</strong>
+            </div>
             <p className="cart-summary__note">
-              We confirm delivery cost with you before anything ships.
+              {zone
+                ? `Arrives in ${zone.delivery_period}.`
+                : 'Choose your state to see delivery.'}
             </p>
             <Link to="/cart" className="link-arrow cart-summary__back">
               ← Back to cart

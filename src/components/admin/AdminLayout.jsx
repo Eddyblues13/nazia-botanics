@@ -10,6 +10,7 @@ import {
   IconJournal,
   IconList,
   IconLogout,
+  IconTruck,
   IconMail,
   IconMenu,
   IconOrders,
@@ -29,6 +30,7 @@ const NAV = [
   { to: '/admin/reviews', label: 'Reviews', icon: IconStar, badge: 'reviews_pending' },
   { to: '/admin/waitlist', label: 'Waitlist', icon: IconList, badge: 'waitlist_waiting' },
   { to: '/admin/subscribers', label: 'Subscribers', icon: IconMail },
+  { to: '/admin/delivery', label: 'Delivery', icon: IconTruck },
   { to: '/admin/team', label: 'Team', icon: IconUsers, ownerOnly: true },
   { to: '/admin/account', label: 'Account', icon: IconUserCog },
 ]

@@ -124,3 +124,11 @@ export const IconPlus = (p) => (
     <path d="M12 5v14M5 12h14" />
   </svg>
 )
+
+export const IconTruck = (p) => (
+  <svg {...base} {...p}>
+    <path d="M3 7h10v9H3zM13 10h4l3 3v3h-7z" />
+    <circle cx="7" cy="18" r="1.6" />
+    <circle cx="17" cy="18" r="1.6" />
+  </svg>
+)
