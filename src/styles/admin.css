@@ -805,3 +805,106 @@
   cursor: not-allowed;
   opacity: 0.45;
 }
+
+/* ---------- Tables as cards on narrow screens ----------
+   A dashboard table is 640-850px wide. On a phone that means three columns of
+   eight are visible and the rest sit behind a sideways scroll, which is easy
+   to miss entirely. Below this width each row is drawn as a card instead:
+   every cell on its own line, labelled with its column. TableWrap stamps the
+   label onto each cell as `data-label`. */
+@media (max-width: 899px) {
+  .ad-tablewrap {
+    overflow-x: visible;
+  }
+  .ad-table {
+    min-width: 0;
+    display: block;
+  }
+  /* The headings are read out by each cell's label instead, so the row of them
+     is taken out of the layout — clipped rather than `display: none`, which
+     would take it from screen readers too. */
+  .ad-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .ad-table tbody {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .ad-table tbody tr {
+    display: block;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--ad-line);
+    border-radius: 12px;
+    background: var(--white);
+  }
+  .ad-table tbody tr + tr {
+    border-top: 1px solid var(--ad-line);
+  }
+  .ad-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.3rem 0;
+    border: 0;
+    text-align: right;
+  }
+  .ad-table td::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ad-muted);
+    text-align: left;
+  }
+  /* The actions column has no heading, so it gets no label and takes the full
+     width for its buttons. */
+  .ad-table td[data-label='']::before {
+    content: none;
+  }
+  .ad-table td[data-label=''] {
+    justify-content: flex-start;
+    padding-top: 0.7rem;
+  }
+  .ad-table td[data-label=''] .ad-table__actions {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  /* A row with a spanning cell is a totals line — "Subtotal / 25,000". Its
+     cells already read as label and value, so the column names are dropped;
+     otherwise it comes out as "PRODUCT Subtotal". Where :has() is missing the
+     labels simply stay, which is untidy rather than broken. */
+  .ad-table tbody tr:has(td[colspan]) {
+    /* Laid out as one line rather than a card: a totals row is a label and a
+       figure, not a record of its own. */
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.35rem 1rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .ad-table tbody tr:has(td[colspan]) td::before {
+    content: none;
+  }
+  .ad-table tbody tr:has(td[colspan]) td {
+    display: block;
+    padding: 0;
+    text-align: left;
+  }
+  .ad-table tbody tr:has(td[colspan]) td:last-child {
+    text-align: right;
+  }
+  /* A little air between the last item card and the figures under it. */
+  .ad-table tbody tr:not(:has(td[colspan])) + tr:has(td[colspan]) {
+    padding-top: 0.6rem;
+  }
+}

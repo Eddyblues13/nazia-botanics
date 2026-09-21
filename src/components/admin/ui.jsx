@@ -1,3 +1,4 @@
+import { Children, cloneElement, isValidElement } from 'react'
 /**
  * Shared dashboard primitives. `bodyFlush` turns off the panel's own padding
  * for tables, which manage their cell padding themselves.
@@ -72,6 +73,30 @@ export function ErrorState({ message, onRetry }) {
 
 /** Horizontal scroll lives here so wide tables never push the page sideways. */
 export function TableWrap({ head, children }) {
+  // On a narrow screen each row is drawn as a card instead of a table row, so
+  // every cell has to say which column it is. The label is stamped on here
+  // rather than by each page, which keeps all the dashboard's tables in step
+  // and means a page cannot forget one. `colSpan` is respected so a totals row
+  // spanning four columns still lines up with the right heading.
+  const labelled = Children.map(children, (row) => {
+    if (!isValidElement(row) || row.type !== 'tr') return row
+
+    let column = 0
+    const cells = Children.map(row.props.children, (cell) => {
+      if (!isValidElement(cell)) return cell
+
+      const label = head[column] ?? ''
+      column += cell.props.colSpan ?? 1
+
+      // A cell that already names itself is left alone.
+      return cell.props['data-label'] === undefined
+        ? cloneElement(cell, { 'data-label': label })
+        : cell
+    })
+
+    return cloneElement(row, undefined, cells)
+  })
+
   return (
     <div className="ad-tablewrap">
       <table className="ad-table">
@@ -82,7 +107,7 @@ export function TableWrap({ head, children }) {
             ))}
           </tr>
         </thead>
-        <tbody>{children}</tbody>
+        <tbody>{labelled}</tbody>
       </table>
     </div>
   )
