@@ -2477,3 +2477,131 @@
   margin-top: 1.2rem;
   margin-bottom: 0;
 }
+
+/* ---------- Saving an order to an account ---------- */
+.order-claim {
+  margin: 1.4rem 0;
+  padding: 1rem 1.1rem;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  background: var(--cream);
+}
+.order-claim p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+.order-claim strong {
+  color: var(--ink);
+}
+.order-claim__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 0.9rem;
+}
+.order-claim--done {
+  border-style: solid;
+  border-color: rgba(46, 125, 50, 0.4);
+}
+
+/* ---------- Delivery zones at checkout ----------
+   A radio list rather than a dropdown: the price and the areas covered are
+   what someone is choosing between, and a <select> can only show one line of
+   that at a time. */
+.zones {
+  border: 0;
+  margin: 0 0 1.2rem;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.zones legend {
+  display: block;
+  padding: 0;
+  margin-bottom: 0.7rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.form-card .zone,
+.zone {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--cream);
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--ink);
+  transition: border-color 0.25s var(--ease), background 0.25s var(--ease);
+}
+.zone:hover {
+  border-color: var(--ink-soft);
+}
+/* The whole card reads as selected, not just the dot. */
+.zone:has(input:checked) {
+  border-color: var(--ink);
+  background: var(--white);
+}
+.zone:has(input:focus-visible) {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.zone input {
+  width: auto;
+  margin: 0.15rem 0 0;
+  accent-color: var(--ink);
+  flex: 0 0 auto;
+}
+.zone__body {
+  display: grid;
+  gap: 0.25rem;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.zone__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 1rem;
+}
+.zone__fee {
+  white-space: nowrap;
+}
+.zone__areas {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.zone__when {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- Checkbox rows on storefront forms ---------- */
+.form-card .checkbox,
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 0.95rem;
+  color: var(--ink);
+  margin-bottom: 1.2rem;
+  cursor: pointer;
+}
+.checkbox input {
+  width: auto;
+  margin: 0;
+  accent-color: var(--ink);
+  flex: 0 0 auto;
+}

@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import PageHero from '@/components/common/PageHero'
 import Reveal from '@/components/common/Reveal'
-import { fetchMyOrders, fetchOrder } from '@/lib/api'
+import { claimOrder, fetchMyOrders, fetchOrder } from '@/lib/api'
 import { useAsyncData } from '@/hooks/useAsyncData'
 import { useCustomerAuth } from '@/context/customer-auth-context'
 import { formatDateTime, formatNaira } from '@/lib/format'
@@ -84,7 +84,31 @@ export default function Account() {
   const [reference, setReference] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [claimed, setClaimed] = useState('')
+  // Bumped after a successful claim so the list above refetches.
+  const [listKey, setListKey] = useState(0)
   const navigate = useNavigate()
+
+  const claim = async (e) => {
+    e.preventDefault()
+    const trimmed = reference.trim().toUpperCase()
+    if (!trimmed || isSubmitting) return
+
+    setIsSubmitting(true)
+    setError('')
+    setClaimed('')
+
+    try {
+      await claimOrder(trimmed)
+      setReference('')
+      setClaimed(`${trimmed} was added to your account.`)
+      setListKey((n) => n + 1)
+    } catch (err) {
+      setError(err.errors?.reference ?? err.message)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   const submit = async (e) => {
     e.preventDefault()
@@ -125,7 +149,38 @@ export default function Account() {
             <>
               <Reveal className="form-card">
                 <h3>Your orders</h3>
-                <OrderList />
+                <OrderList key={listKey} />
+              </Reveal>
+
+              <Reveal className="form-card" delay={0.05}>
+                <form onSubmit={claim}>
+                  <h3>Add an earlier order</h3>
+                  <p className="form-card__hint">
+                    Ordered before you had an account? Enter the reference from that
+                    confirmation and it will join the list above. It has to be an order
+                    placed with <strong>{customer.email}</strong>.
+                  </p>
+                  <label>
+                    Order reference
+                    <input
+                      type="text"
+                      required
+                      placeholder="NB-000000-0000"
+                      value={reference}
+                      disabled={isSubmitting}
+                      onChange={(e) => setReference(e.target.value)}
+                    />
+                  </label>
+                  <button type="submit" className="btn" disabled={isSubmitting}>
+                    <span>{isSubmitting ? 'Adding…' : 'Add to my account'}</span>
+                  </button>
+                  {error && (
+                    <p className="form-card__error" role="alert">
+                      {error}
+                    </p>
+                  )}
+                  {claimed && <p className="form-card__hint">{claimed}</p>}
+                </form>
               </Reveal>
 
               <Reveal className="form-card" delay={0.1}>

@@ -169,6 +169,15 @@ export const logoutCustomer = () => request('/account/logout', { method: 'POST',
 
 export const fetchMyOrders = (signal) => request('/account/orders', { signal, auth: true })
 
+/**
+ * Adds an order placed as a guest to the signed-in account.
+ *
+ * Needs the reference and an account on the same email the order was placed
+ * with — the reference alone is not proof the order belongs to whoever asks.
+ */
+export const claimOrder = (reference) =>
+  request('/account/orders/claim', { method: 'POST', body: { reference }, auth: true })
+
 export const updateCustomerProfile = (body) =>
   request('/account/profile', { method: 'PUT', body, auth: true })
 

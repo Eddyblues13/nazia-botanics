@@ -5,6 +5,7 @@ import Reveal from '@/components/common/Reveal'
 import { fetchOrder, verifyPayment } from '@/lib/api'
 import { useAsyncData } from '@/hooks/useAsyncData'
 import { formatDateTime, formatNaira } from '@/lib/format'
+import SaveOrderPrompt from '@/components/account/SaveOrderPrompt'
 
 const PAYMENT_COPY = {
   pending: 'Waiting for your payment to clear.',
@@ -138,6 +139,8 @@ export default function OrderStatus() {
                   <p className="form-card__hint">Arrives in {order.delivery_period}.</p>
                 )}
               </div>
+
+              {!order.in_account && <SaveOrderPrompt order={order} />}
 
               <Link to="/shop" className="btn btn--ghost"><span>Back to the shop</span></Link>
             </Reveal>

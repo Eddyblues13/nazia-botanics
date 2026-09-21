@@ -2,9 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import PageHero from '@/components/common/PageHero'
 import Reveal from '@/components/common/Reveal'
-import { createOrder, fetchDeliveryZones } from '@/lib/api'
+import { createOrder, fetchDeliveryZones, setCustomerToken } from '@/lib/api'
 import { useCart } from '@/context/cart-context'
 import { useCustomerAuth } from '@/context/customer-auth-context'
+import PasswordField from '@/components/common/PasswordField'
 import { formatNaira } from '@/lib/format'
 import { useSeo } from '@/hooks/useSeo'
 
@@ -13,8 +14,10 @@ const EMPTY = {
   customer_phone: '',
   customer_email: '',
   delivery_address: '',
-  delivery_state: '',
+  delivery_zone: '',
   note: '',
+  create_account: false,
+  password: '',
 }
 
 export default function Checkout() {
@@ -26,7 +29,7 @@ export default function Checkout() {
   })
 
   const { cart, subtotal, isEmpty, orderItems, clearCart } = useCart()
-  const { customer } = useCustomerAuth()
+  const { customer, isSignedIn, setCustomer } = useCustomerAuth()
   const navigate = useNavigate()
 
   // A signed-in customer starts with their name and email already filled; the
@@ -53,8 +56,8 @@ export default function Checkout() {
   // The fee shown is the zone's; the server charges from the same table, so
   // what is quoted here is what is taken.
   const zone = useMemo(
-    () => zones.find((z) => z.state === form.delivery_state) ?? null,
-    [zones, form.delivery_state]
+    () => zones.find((z) => z.name === form.delivery_zone) ?? null,
+    [zones, form.delivery_zone]
   )
   const deliveryFee = zone?.fee ?? 0
   const total = subtotal + deliveryFee
@@ -86,6 +89,13 @@ export default function Checkout() {
 
       // The cart is only cleared once the order is safely recorded.
       clearCart()
+
+      // An account created during checkout comes back signed in, so they
+      // return from Paystack already logged in.
+      if (payload.account?.token) {
+        setCustomerToken(payload.account.token)
+        setCustomer(payload.account.user)
+      }
 
       const authorizationUrl = payload.payment?.authorization_url
 
@@ -168,30 +178,83 @@ export default function Checkout() {
                 <p className="form-card__error">{fieldErrors.delivery_address}</p>
               )}
 
-              <label>
-                State
-                <select required {...field('delivery_state')}>
-                  <option value="">Choose your state</option>
-                  {zones.map((z) => (
-                    <option key={z.state} value={z.state}>
-                      {z.state} — {formatNaira(z.fee)} · {z.delivery_period}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              {zonesFailed && (
-                <p className="form-card__error">
-                  We could not load delivery areas. Please refresh and try again.
-                </p>
-              )}
-              {fieldErrors.delivery_state && (
-                <p className="form-card__error">{fieldErrors.delivery_state}</p>
+              <fieldset className="zones">
+                <legend>Where are we delivering?</legend>
+
+                {zonesFailed && (
+                  <p className="form-card__error">
+                    We could not load delivery areas. Please refresh and try again.
+                  </p>
+                )}
+
+                {zones.map((z) => (
+                  <label className="zone" key={z.name}>
+                    <input
+                      type="radio"
+                      name="delivery_zone"
+                      value={z.name}
+                      required
+                      disabled={isSubmitting}
+                      checked={form.delivery_zone === z.name}
+                      onChange={(e) => setForm({ ...form, delivery_zone: e.target.value })}
+                    />
+                    <span className="zone__body">
+                      <span className="zone__head">
+                        <strong>{z.name}</strong>
+                        <strong className="zone__fee">{formatNaira(z.fee)}</strong>
+                      </span>
+                      {z.areas?.length > 0 && (
+                        <span className="zone__areas">{z.areas.join(' · ')}</span>
+                      )}
+                      <span className="zone__when">{z.delivery_period}</span>
+                    </span>
+                  </label>
+                ))}
+              </fieldset>
+              {fieldErrors.delivery_zone && (
+                <p className="form-card__error">{fieldErrors.delivery_zone}</p>
               )}
 
               <label>
                 Anything we should know? <span className="form-card__optional">(optional)</span>
                 <textarea rows={2} placeholder="Landmark, delivery window…" {...field('note')} />
               </label>
+
+              {!isSignedIn && (
+                <>
+                  <label className="checkbox">
+                    <input
+                      type="checkbox"
+                      checked={form.create_account}
+                      disabled={isSubmitting}
+                      onChange={(e) => setForm({ ...form, create_account: e.target.checked })}
+                    />
+                    <span>Create an account?</span>
+                  </label>
+
+                  {form.create_account && (
+                    <label>
+                      Choose a password
+                      <PasswordField
+                        autoComplete="new-password"
+                        required
+                        value={form.password}
+                        disabled={isSubmitting}
+                        onChange={(e) => setForm({ ...form, password: e.target.value })}
+                      />
+                    </label>
+                  )}
+                  {fieldErrors.password && (
+                    <p className="form-card__error">{fieldErrors.password}</p>
+                  )}
+                  {form.create_account && !fieldErrors.password && (
+                    <p className="form-card__hint">
+                      At least 8 characters. Your order will be saved to the account
+                      automatically.
+                    </p>
+                  )}
+                </>
+              )}
 
               <button type="submit" className="btn btn--terracotta" disabled={isSubmitting}>
                 <span>
@@ -222,7 +285,7 @@ export default function Checkout() {
               <strong>{formatNaira(subtotal)}</strong>
             </div>
             <div className="cart-summary__row">
-              <span>Delivery{zone ? ` · ${zone.state}` : ''}</span>
+              <span>Delivery{zone ? ` · ${zone.name}` : ''}</span>
               <strong>{zone ? formatNaira(deliveryFee) : '—'}</strong>
             </div>
             <div className="cart-summary__row cart-summary__row--total">
@@ -232,7 +295,7 @@ export default function Checkout() {
             <p className="cart-summary__note">
               {zone
                 ? `Arrives in ${zone.delivery_period}.`
-                : 'Choose your state to see delivery.'}
+                : 'Choose your area to see delivery.'}
             </p>
             <Link to="/cart" className="link-arrow cart-summary__back">
               ← Back to cart
